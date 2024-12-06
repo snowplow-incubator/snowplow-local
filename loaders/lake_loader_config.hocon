@@ -1,0 +1,48 @@
+{
+  "license": {
+    "accept": ${ACCEPT_LICENSE}
+  },
+
+  "input": {
+    "streamName": "enriched-good"
+    "customEndpoint": "http://localhost.localstack.cloud:4566"
+    "dynamodbCustomEndpoint": "http://localhost.localstack.cloud:4566"
+    "s3CustomEndpoint": "http://localhost.localstack.cloud:4566"
+
+  }
+
+  "output": {
+
+    "good": {
+      "type": "Iceberg",
+      "database": "test"
+      "table": "events"
+      "location": "/tmp/iceberg" # this can also be S3!
+      "catalog": {
+        "type": "Hadoop"
+      }
+    }
+
+    "bad": {
+      "streamName": "bad"
+    }
+  }
+
+  "spark": {
+
+    # -- How many times a Spark task should be retried in case of failure.
+    "taskRetries": 3
+
+    # -- Any valid spark configuration key/value.
+    # -- This can be blank in most setups because the loader already sets sensible defaults.
+    # https://github.com/apache/iceberg/commit/fa6403b1888847ce04de50c6b159dd43fdcb4590
+    "conf": {
+      "fs.s3a.endpoint": "localhost.localstack.cloud:4566"
+    }
+  }
+
+  "windowing": "1 minute" # deliberately short period for frequent writes
+  "telemetry": {
+    "disable": true
+  }
+}
