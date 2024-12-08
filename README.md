@@ -8,6 +8,7 @@ Snowplow Local is designed to provide a fast, easy to use local development envi
 
 - Develop and test new schemas and enrichments
 - Test out new loaders (e.g., Snowflake, BigQuery, Lake Loader)
+- View bad, incomplete and good events in an easy-to-use user interface
 - Test changes to the pipeline configuration (collector, enrich, etc)
 - Stream data to your data warehouse or lake of choice
 - Monitor pipeline performance and metrics using Grafana
@@ -36,6 +37,8 @@ This software is licensed under the Snowplow Limited Use License Agreement. For 
 ## Services
 
 The collector runs on port 8080 and can be accessed at [http://localhost:8080](http://localhost:8080). When configuring a [tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/) you can use this as the collector URL.
+
+A user interface listens to events that have been enriched (good, bad and incomplete) and displays them hosted on a page at [http://localhost:3001](http://localhost:3001).
 
 [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) runs on port 8081 and can be accessed at [http://localhost:8081](http://localhost:8081). This is where you can upload your schemas and validate them. You can also point enrich directly at an existing Iglu repository that contains schemas by updating `iglu-client/resolver.json`.
 
@@ -185,8 +188,6 @@ Finally, the local version also includes full support for incomplete events as p
 ## Known issues
 
 The KCL, specifically within enrich has a pesty habit of being slow to 'steal' leases and start processing data on initial startup. Although events can be collected immediately it may take up to 60 seconds on subsequent startups for enrich to start enriching events. Once this period has passed everything works as per normal.
-
-
 
 ## Copyright and license
 

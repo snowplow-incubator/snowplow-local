@@ -145,15 +145,6 @@ services:
     volumes:
       - "./site:/usr/share/nginx/html"
 
-  # websocket-app:
-  #   container_name: "websocket-app"
-  #   build: "app/"
-  #   volumes:
-  #     - "./app:/app"
-  #   command: "python app.py"
-  #   ports:
-  #     - "8083:8765"
-
   redpanda-connect:
     container_name: "connect"
     image: docker.redpanda.com/redpandadata/connect:4.38.0
@@ -162,11 +153,13 @@ services:
       - "4195:4195"
     depends_on:
       - enrich
+      - local-failed-ui
     volumes:
       - "./connect/benthos.yaml:/benthos.yaml"
       - "./database:/database"
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
+      - "host.docker.internal:host-gateway"
 
   # # setup optional Snowflake streaming sink
 
@@ -288,3 +281,9 @@ services:
       - "START_TIMESTAMP=${START_TIMESTAMP}"
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
+
+  local-failed-ui:
+    container_name: "local-failed-ui"
+    image: "snowplow/failed-events-ui:0.0.1"
+    ports:
+      - "3001:3000"
