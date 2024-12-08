@@ -17,7 +17,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.2.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.2.1-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
