@@ -94,4 +94,6 @@ output:
             root = [this.schema, this.data.string()]
           batching:
             count: 1
+      - websocket:
+          url: ws://host.docker.internal:3001/api/ws
     
