@@ -17,7 +17,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.2.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.2.1-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
@@ -221,19 +221,22 @@ services:
       - enrich
       - iglu-server
     volumes:
-      - "./loaders/lake_loader_config.hocon:/loaders/lake_loader_config.hocon"
+      - "./loaders/lake_loader_config_iceberg_s3.hocon:/loaders/lake_loader_config.hocon"
       - "./iglu-client:/snowplow/iglu-client"
     profiles: [lake-loader]
     environment:
       - "ACCEPT_LICENSE=${ACCEPT_LICENSE}"
+      - "AWS_ENDPOINT_URL=http://localhost.localstack.cloud:4566"
+      - "AWS_ENDPOINT_URL_S3=http://s3.localhost.localstack.cloud:4566"
+      - "AWS_ACCOUNT_ID=000000000000"
       - "AWS_ACCESS_KEY_ID=localstack"
       - "AWS_SECRET_ACCESS_KEY=doesntmatter"
       - "AWS_REGION=ap-southeast-2"
-      - "AWS_ENDPOINT_S3=http://localhost.localstack.cloud:4566"
-      - "AWS_ENDPOINT_URL=http://localhost.localstack.cloud:4566"
 
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
+      - "s3.localhost.localstack.cloud:host-gateway"
+      - "snowplow-lake-loader.s3.localhost.localstack.cloud:host-gateway"
 
   bigquery-loader:
     container_name: bigquery-loader
