@@ -69,7 +69,7 @@ If you would like to (optionally) run the Snowflake streaming loader as well you
 1. Configure your Snowflake private key and warehouse details in your `.env` file. You will need a [private key](https://docs.snowflake.com/en/user-guide/key-pair-auth) set up rather than a username / password as this is what the app uses for authentication.
 2. Launch docker compose with the warehouse you would like:
 * For Snowflake streaming loader use:  `docker-compose --profile snowflake-loader up` which will launch the normal components + the Snowflake Kinesis loader.
-* For the Lake loader use `--profile lake-loader`.
+* For the Lake loader use `--profile lake-loader` (you can use Lake Loader to load to a remote blob storage service, e.g., S3 or locally using Localstack).
 * For the BigQuery loader use `--profile bigquery-loader`.
 3. Send some events!
 
@@ -141,6 +141,12 @@ e.g., for BASH use
 ```bash
 export SERVICE_ACCOUNT_CREDENTIALS=$(cat /path/to/your/service-account-key.json)
 ```
+
+### Lake loader
+
+Lake loader can use a remote object store (e.g., AWS S3, GCS, Blob Storage) etc but will work equally well writing to Localstack S3. An example configuration of this can be found in `loaders/lake_loader_config_iceberg_s3.hocon`.
+
+If you wish to load to a different (local) bucket ensure that the resource is created in `init-aws.sh` before attempting to run the loader. Once loading has been setup you can view the data that lake loader writes out in your browser using: `https://snowplow-lake-loader.s3.localhost.localstack.cloud:4566/` or the equivalent name for your bucket.
 
 ## Incomplete events
 
