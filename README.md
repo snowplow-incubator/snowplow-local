@@ -15,6 +15,7 @@ Snowplow Local is designed to provide a fast, easy to use local development envi
 - Test new or existing versions of the Snowplow pipeline
 - Write enriched data to remote destinations (including S3, GCS etc)
 - Test and validate Snowbridge configurations
+- Send events remotely from another machine to your local pipeline (via `--profile tunnel`)
 
 ## Licensing
 
@@ -45,6 +46,8 @@ A user interface listens to events that have been enriched (good, bad and incomp
 [Grafana](https://grafana.com) is used for metrics reporting and basic dashboarding and runs on port 3000 and can be accessed at [http://localhost:3000](http://localhost:3000). The default credentials are `admin:admin`. Graphite is used as the default data source so this does not require manual configuration - the collector and [enricher](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/monitoring/) will both emit statsd metrics here automatically.
 
 A basic website that can be used to fire test events can be accessed at [http://localhost:8082](http://localhost:8082). This is useful for testing your pipeline and ensuring that events are being collected correctly.
+
+Although test events can be fired locally you can also send events from another remote machine using the `--tunnel` profile. See the 'Tunneling' section below.
 
 ## Differences to a production pipeline
 
@@ -127,6 +130,10 @@ This setup includes a Grafana instance that can be accessed at [http://localhost
 Logs for components that write them (e.g., collector, enrich) are written to Cloudwatch on Localstack.
 
 The storage for Grafana is also mounted as a volume so you can persist any dashboards and data across restarts, rather than losing them on reboot!
+
+## Tunneling
+
+By using the `--profile tunnel` flag this will start a ngrok tunnel locally that enables traffic forwarding from an arbitrary URL to your local collector. You can configure this forwarding URL and other settings in `tunnel/ngrok.yml` by copying over the example file - `ngrok.yml.example`. In addition you can configure security settings (e.g., only allowing traffic from certain IP ranges / CIDRs) by customising the `ngrok/policy.yml` file. For more configuration options see the ngrok agent config documentation [here](https://ngrok.com/docs/agent/config/v3/).
 
 ## Gotchas
 

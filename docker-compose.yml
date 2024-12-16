@@ -290,3 +290,19 @@ services:
     image: "snowplow/failed-events-ui:0.0.1"
     ports:
       - "3001:3000"
+
+  ngrok:
+    container_name: ngrok-tunnel
+    image: ngrok/ngrok:latest
+    profiles: [tunnel]
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - "./tunnel/ngrok.yml:/etc/ngrok.yml"
+      - "./tunnel/policy.yml:/etc/policy.yml"
+    ports:
+      - "4040:4040"
