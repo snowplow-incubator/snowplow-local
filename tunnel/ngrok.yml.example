@@ -1,0 +1,12 @@
+version: 3
+
+agent:
+  authtoken: ""
+
+endpoints:
+  - name: collector
+    url: https://snowplow.ngrok.app
+    upstream:
+      url: http://localhost:8080
+    traffic_policy_file: /etc/policy.yml
+
