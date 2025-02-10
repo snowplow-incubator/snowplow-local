@@ -1,0 +1,11 @@
+{
+  "schema": "iglu:com.snowplowanalytics.snowplow.enrichments/http_header_extractor_config/jsonschema/1-0-0",
+  "data": {
+    "name": "http_header_extractor_config",
+    "vendor": "com.snowplowanalytics.snowplow.enrichments",
+    "enabled": false,
+    "parameters": {
+      "headersPattern": ".*"
+    }
+  }
+}

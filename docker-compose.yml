@@ -287,7 +287,7 @@ services:
 
   local-failed-ui:
     container_name: "local-failed-ui"
-    image: "snowplow/failed-events-ui:0.0.1"
+    image: "snowplow/failed-events-ui:0.0.2"
     ports:
       - "3001:3000"
 
@@ -306,3 +306,16 @@ services:
       - "./tunnel/policy.yml:/etc/policy.yml"
     ports:
       - "4040:4040"
+
+  control-plane:
+    container_name: "snowplow-control-plane"
+    build: "control-plane/"
+    command: "flask run --host=0.0.0.0 --debug"
+    environment:
+      - "FLASK_APP=app"
+    volumes:
+      - "./enrich:/enrich"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "8083:5000"
+

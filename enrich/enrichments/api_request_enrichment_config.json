@@ -1,0 +1,43 @@
+{
+  "schema": "iglu:com.snowplowanalytics.snowplow.enrichments/api_request_enrichment_config/jsonschema/1-0-0",
+  "data": {
+    "name": "api_request_enrichment_config",
+    "vendor": "com.snowplowanalytics.snowplow.enrichments",
+    "enabled": false,
+    "parameters": {
+      "inputs": [
+        {
+          "key": "user",
+          "pojo": {
+            "field": "user_id"
+          }
+        }
+      ],
+      "api": {
+        "http": {
+          "method": "GET",
+          "uri": "http://api.acme.com/users/{{client}}/{{user}}?format=json",
+          "timeout": 5000,
+          "authentication": {
+            "httpBasic": {
+              "username": "NA",
+              "password": "NA"
+            }
+          }
+        }
+      },
+      "outputs": [
+        {
+          "schema": "iglu:com.acme/user/jsonschema/1-0-0",
+          "json": {
+            "jsonPath": "$.record"
+          }
+        }
+      ],
+      "cache": {
+        "size": 3000,
+        "ttl": 60
+      }
+    }
+  }
+}
