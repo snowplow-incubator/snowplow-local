@@ -1,0 +1,17 @@
+{
+    "data": {
+        "enabled": true,
+        "name": "event_fingerprint_config",
+        "parameters": {
+            "excludeParameters": [
+                "cv",
+                "eid",
+                "nuid",
+                "stm"
+            ],
+            "hashAlgorithm": "SHA1"
+        },
+        "vendor": "com.snowplowanalytics.snowplow"
+    },
+    "schema": "iglu:com.snowplowanalytics.snowplow/event_fingerprint_config/jsonschema/1-0-1"
+}

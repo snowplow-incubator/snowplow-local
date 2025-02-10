@@ -43,11 +43,10 @@
         "port": 8125
 
         # Required, how frequently to report metrics
-        "period": "10 seconds"
+        "period": "1 second"
 
         # Any key-value pairs to be tagged on every StatsD metric
-        "tags": {
-        }
+        "tags": {}
 
         "prefix": "snowplow.snowflake.loader"
     }
