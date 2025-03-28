@@ -1,4 +1,8 @@
 {
+  "license": {
+    "accept": ${ACCEPT_LICENSE}
+  }
+
   "input": {
     "streamName": "enriched-incomplete"
     "customEndpoint": "http://localhost.localstack.cloud:4566"
@@ -12,6 +16,17 @@
         "maxRecords": 500
     }
     "bufferSize": 1
+    "workerIdentifier": "snowplow-local"
+    "leaseDuration": "10 seconds"
+    "maxLeasesToStealAtOneTimeFactor": 2.0
+    
+    "checkpointThrottledBackoffPolicy": {
+      "minBackoff": "100 millis"
+      "maxBackoff": "1 second"
+    }
+
+    "debounceCheckpoints": "5 seconds"
+
   }
 
   "output": {

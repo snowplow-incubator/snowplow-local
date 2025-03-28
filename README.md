@@ -163,6 +163,36 @@ Lake loader can use a remote object store (e.g., AWS S3, GCS, Blob Storage) etc 
 
 If you wish to load to a different (local) bucket ensure that the resource is created in `init-aws.sh` before attempting to run the loader. Once loading has been setup you can view the data that lake loader writes out in your browser using: `https://snowplow-lake-loader.s3.localhost.localstack.cloud:4566/` or the equivalent name for your bucket.
 
+## Querying events in SQLite
+
+By default events (both good, failed and bad) are inserted into SQLite for storage and analysis in their enriched event format.
+
+These are stored as JSON objects and as a result you can use SQLite JSON operators to query the values inside. Note that these are not the same queries you would use in a warehouse where the loaders create new columns for each entity and event automatically.
+
+Example queries
+
+Get the app_id for all good events
+
+```
+select
+    json_extract(data, '$.app_id') as app_id,
+from
+    events
+WHERE
+    schema LIKE '%good%';
+```
+
+Retrieve the first context
+
+```
+select
+    json_extract(json_extract(data, '$.derived_contexts'), '$.data[0]')
+from
+    events
+WHERE
+    schema LIKE '%good%';
+```
+
 ## Incomplete events
 
 Currently incomplete events load into the same table as successful events. This is deliberate - but can be overwritten by specifying a different table in the `incomplete` loader HOCON configuration file.

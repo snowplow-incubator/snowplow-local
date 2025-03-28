@@ -41,6 +41,18 @@
     }
   }
 
+  # -- Whether the loader should crash and exit if it fails to resolve an Iglu Schema.
+  # -- We recommend `true` because Snowplow enriched events have already passed validation, so a missing schema normally
+  # -- indicates an error that needs addressing.
+  # -- Change to `false` so events go the failed events stream instead of crashing the loader.
+  "exitOnMissingIgluSchema": true
+
+  # -- Whether the output parquet files should declare nested fields as non-nullable according to the Iglu schema.
+  # -- When true (default), nested fields are nullable only if they are not required fields according to the Iglu schema.
+  # -- When false, all nested fields are defined as nullable in the output table's schemas
+  # -- Set this to false if you use a query engine that dislikes non-nullable nested fields of a nullable struct.
+  "respectIgluNullability": true
+
   "windowing": "1 minute" # deliberately short period for frequent writes
   "telemetry": {
     "disable": true
