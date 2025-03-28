@@ -1,8 +1,16 @@
 # Snowplow Local
 
-## Background
+## What is Snowplow Local for?
 
-Snowplow Local is designed to provide a fast, easy to use local development environment that spins up an entire Snowplow pipeline that more closely resembles a production (AWS) environment by mocking out these services using [Localstack](https://www.localstack.cloud/).
+Snowplow Local is designed to provide a fast, easy to use local development environment that spins up an entire Snowplow pipeline that more closely resembles a production (AWS) environment by mocking out these services using [Localstack](https://www.localstack.cloud/). Is is the fastest way to spin up a Snowplow pipeline without requiring any cloud access or external services.
+
+It is not designed for production use and comes with only a minimal user interface. For a fully-managed or self-managed experience see the [Snowplow BDP product](https://docs.snowplow.io/docs/get-started/snowplow-bdp/) or [self-hosted pipeline](https://snowplow.io/snowplow-self-hosted-pipeline-product-description) respectively.
+
+## Who is Snowplow Local for?
+
+Snowplow Local is designed for developers, data engineers and data scientists who want to develop, test and debug Snowplow pipelines locally without needing to deploy to a cloud environment. It is also useful for those who want to test or experiment with new features or changes to the pipeline without affecting a production environment.
+
+Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) and as a result is best suited for more technical users that are comfortable with the basics of the command line and editing configuration files.
 
 ## What can you do with Snowplow Local?
 
@@ -112,14 +120,14 @@ The syntax for this command may vary slightly depending on your shell. You can f
 
 ## Supported components
 
-* [Scala stream collector](https://docs.snowplow.io/docs/pipeline-components-and-applications/stream-collector/) 3.2.0
-* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 5.0.0
-* [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) 0.12.1
+* [Scala stream collector](https://docs.snowplow.io/docs/pipeline-components-and-applications/stream-collector/) 3.3.0
+* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 5.3.0
+* [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) 0.14.0
 * [Javascript tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/) 3.23
-* [Snowflake streaming loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/snowflake-streaming-loader/) 0.2.4
-* [Lake Loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/lake-loader/) 0.5.0
+* [Snowflake streaming loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/snowflake-streaming-loader/) 0.4.0
+* [Lake Loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/lake-loader/) 0.6.1
 * [BigQuery loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.0-rc10)
-* [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 2.4.2
+* [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.2.1
 
 Under the hood Localstack is used to simulate the AWS components - primarily used for service messaging (Kinesis and Dynamodb) including the communication between the collector and the enricher as well as checkpointing for KCL. Localstack also provides a mock S3 service that you can use if you wish to use the Lake Loader to write to S3 (which in turn uses the local filesystem rather than AWS S3). By default Localstack will persist state to disk.
 
@@ -154,6 +162,36 @@ export SERVICE_ACCOUNT_CREDENTIALS=$(cat /path/to/your/service-account-key.json)
 Lake loader can use a remote object store (e.g., AWS S3, GCS, Blob Storage) etc but will work equally well writing to Localstack S3. An example configuration of this can be found in `loaders/lake_loader_config_iceberg_s3.hocon`.
 
 If you wish to load to a different (local) bucket ensure that the resource is created in `init-aws.sh` before attempting to run the loader. Once loading has been setup you can view the data that lake loader writes out in your browser using: `https://snowplow-lake-loader.s3.localhost.localstack.cloud:4566/` or the equivalent name for your bucket.
+
+## Querying events in SQLite
+
+By default events (both good, failed and bad) are inserted into SQLite for storage and analysis in their enriched event format.
+
+These are stored as JSON objects and as a result you can use SQLite JSON operators to query the values inside. Note that these are not the same queries you would use in a warehouse where the loaders create new columns for each entity and event automatically.
+
+Example queries
+
+Get the app_id for all good events
+
+```
+select
+    json_extract(data, '$.app_id') as app_id,
+from
+    events
+WHERE
+    schema LIKE '%good%';
+```
+
+Retrieve the first context
+
+```
+select
+    json_extract(json_extract(data, '$.derived_contexts'), '$.data[0]')
+from
+    events
+WHERE
+    schema LIKE '%good%';
+```
 
 ## Incomplete events
 
