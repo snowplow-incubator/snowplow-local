@@ -96,8 +96,7 @@ The enrichment process runs with mostly default settings. You can configure the 
 
 Some enrichments (specifically the IAB Spiders and Robots, IP lookups and referer parser) rely on third party assets to enrich events that are not stored locally. On start any assets placed in the local `enrich-assets` folder are automatically mounted to a S3 bucket where they can be accessed.
 
-The following enrichments will require manually download or specifying assets due to their license agreements.
-
+The following enrichments will require assets to be manually downloaded or specified due to their license agreements.
 IAB Bots and Spiders - sample files are provided in `enrich-assets`. The commercial list requires payment (for non-BDP customers) and can be downloaded from [here](https://www.iab.com/guidelines/iab-abc-international-spiders-bots-list/).
 
 IP Lookups - IP lookup data is provided by Maxmind. You can use the free (GeoLite) or paid (GeoIP) MMDB databases to perform lookups however both require [registration](https://blog.maxmind.com/2019/12/significant-changes-to-accessing-and-using-geolite2-databases/). The free databases are available from Maxmind [here](https://www.maxmind.com/en/geolite2/signup).
