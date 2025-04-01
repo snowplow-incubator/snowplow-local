@@ -14,6 +14,7 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+      - "./enrich-assets:/enrich-assets"
 
   stream-collector:
     container_name: "snowplow-stream-collector"
@@ -48,13 +49,16 @@ services:
       - "AWS_REGION=ap-southeast-2"
       - "AWS_ACCESS_KEY_ID=localstack"
       - "AWS_SECRET_ACCESS_KEY=doesntmatter"
-      - "AWS_ENDPOINT_URL=localhost.localstack.cloud:4566"
+      - "AWS_ENDPOINT_URL=http://localhost.localstack.cloud:4566"
+      - "AWS_ENDPOINT_URL_S3=http://s3.localhost.localstack.cloud:4566"
     volumes:
       - "./enrich:/snowplow/enrich"
       - "./iglu-client:/snowplow/iglu-client"
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
       - "host.docker.internal:host-gateway"
+      - "s3.localhost.localstack.cloud:host-gateway"
+      - "enrich-assets.s3.localhost.localstack.cloud:host-gateway"
 
   postgres:
     container_name: iglu-postgres

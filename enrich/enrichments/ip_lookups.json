@@ -7,7 +7,7 @@
     "parameters": {
       "geo": {
         "database": "GeoLite2-City.mmdb",
-        "uri": "gs://max-mind-geolite2/"
+        "uri": "s3://enrich-assets/"
       }
     }
   }

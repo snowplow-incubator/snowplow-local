@@ -3,11 +3,11 @@
   "data": {
     "name": "referer_parser", 
     "vendor": "com.snowplowanalytics.snowplow", 
-    "enabled": false, 
+    "enabled": true, 
     "parameters": {
       "database": "referers-latest.json", 
       "internalDomains": [], 
-      "uri": "gs://referer-parser/"
+      "uri": "http://snowplow-hosted-assets.s3.amazonaws.com/third-party/referer-parser/"
     }
   }
 }

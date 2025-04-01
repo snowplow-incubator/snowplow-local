@@ -25,3 +25,7 @@ awslocal kinesis create-stream --stream-name snowbridge-failed --region ap-south
 awslocal dynamodb create-table --table-name snowbridge_clients --region ap-southeast-2 --key-schema AttributeName=ID,KeyType=HASH --attribute-definitions AttributeName=ID,AttributeType=S --billing-mode PAY_PER_REQUEST
 awslocal dynamodb create-table --table-name snowbridge_checkpoints --region ap-southeast-2 --key-schema AttributeName=Shard,KeyType=HASH --attribute-definitions AttributeName=Shard,AttributeType=S --billing-mode PAY_PER_REQUEST
 awslocal dynamodb create-table --table-name snowbridge_metadata --region ap-southeast-2 --key-schema AttributeName=Key,KeyType=HASH --attribute-definitions AttributeName=Key,AttributeType=S --billing-mode PAY_PER_REQUEST
+
+# enrichment assets bucket
+awslocal s3api create-bucket --bucket enrich-assets --region ap-southeast-2 --create-bucket-configuration LocationConstraint=ap-southeast-2
+awslocal s3 cp --recursive /enrich-assets s3://enrich-assets/
