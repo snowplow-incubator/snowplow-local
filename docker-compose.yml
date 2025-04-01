@@ -51,7 +51,6 @@ services:
       - "AWS_SECRET_ACCESS_KEY=doesntmatter"
       - "AWS_ENDPOINT_URL=http://localhost.localstack.cloud:4566"
       - "AWS_ENDPOINT_URL_S3=http://s3.localhost.localstack.cloud:4566"
-      - "JAVA_OPTS=-Dorg.slf4j.simpleLogger.log.InvalidEnriched=debug"
     volumes:
       - "./enrich:/snowplow/enrich"
       - "./iglu-client:/snowplow/iglu-client"
