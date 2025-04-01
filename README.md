@@ -94,6 +94,16 @@ The collector runs with mostly default settings, other than faster drain / reboo
 
 The enrichment process runs with mostly default settings. You can configure the enrichment process in `enrich/enrich.hocon`. Enrichments are read on startup from the `enrich/enrichments` directory.
 
+Some enrichments (specifically the IAB Spiders and Robots, IP lookups and referer parser) rely on third party assets to enrich events that are not stored locally. On start any assets placed in the local `enrich-assets` folder are automatically mounted to a S3 bucket where they can be accessed.
+
+The following enrichments will require manually download or specifying assets due to their license agreements.
+
+IAB Bots and Spiders - sample files are provided in `enrich-assets`. The commercial list requires payment (for non-BDP customers) and can be downloaded from [here](https://www.iab.com/guidelines/iab-abc-international-spiders-bots-list/).
+
+IP Lookups - IP lookup data is provided by Maxmind. You can use the free (GeoLite) or paid (GeoIP) MMDB databases to perform lookups however both require [registration](https://blog.maxmind.com/2019/12/significant-changes-to-accessing-and-using-geolite2-databases/). The free databases are available from Maxmind [here](https://www.maxmind.com/en/geolite2/signup).
+
+Referer parser - provides a classification of hostname referers. Snowplow maintains this list and it is pulled from a remote S3 bucket automatically so requires no additional configuration.
+
 As part of the enrichment process (to enable seamless patching) the Iglu client uses a resolver with a cacheSize of 0 which avoids it caching schemas from Iglu Server. This reduces the performance of the pipeline in favour of a simpler development experience. In a production context this value is often significantly higher (e.g., 500). You can modify the resolver settings in `iglu-client/resolver.json` which will be used by any components that query Iglu Server.
 
 You can find documentation on how to configure the enrichment process [here](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/configuration-reference/).

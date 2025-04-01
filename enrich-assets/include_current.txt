@@ -1,0 +1,236 @@
+#
+#	IAB_ABCe_International_List_of_Valid_Browsers_201001_21-091508
+#	January 21, 2010
+#
+# **********COMMENTS SECTION***************************************************
+#
+# This list has been reviewed by the IAB MTF Spider & Robot Policy Board.
+# The file contains a list of patterns that may be matched against HTTP User 
+# Agent (UA) strings to determine whether that UA matches a known browser. This
+# is one step of several required for compliance to IAB Advertising Measurement
+# Guidelines. 
+# 
+# The list is only valid for use with Client Side Counting (CSC) transactions.
+# See [http://www.iab.net/iab_products_and_industry_services/508676/guidelines/campaign_measurement_audit] for more info
+#
+# A User Agent must contain one of these patterns in order to be included
+# in impression counts.
+#
+# It is strongly suggested that users analyze their own log data and then sort 
+# this list in order of frequency to allow the filter program to work 
+# efficiently. The order presented below is based on an analysis performed by 
+# ImServices but may not be representative of all traffic.
+#
+# This list is provided in good faith but must be used at the user's own risk.  
+# The IAB, ABCe and ImServices accept no responsibility for any 
+# legal, technical or commercial consequences arising from the use of this 
+# list. 
+#
+# Special characters in this file:
+#	# - (only at the start of a line) this line is a comment 
+#	| - field separator 
+# blank lines may be present. ignore them.
+#
+# The fields are delimited by a pipe symbol [|]:
+#
+# 1) pattern - case insensitive string to match
+# 	reserved characters are URL-escaped if present (=%7C, #=%23)
+# 2) active flag
+# 	1=pattern is active and should be matched
+# 	0=pattern is inactive, and should ignored
+# 3) start-of-string flag
+# 	1=pattern must occur at the start of the UA string
+# 	0=pattern may appear anywhere within the UA string
+# 4) **Inactive Date. Inactive User Agent List Only.
+# 	mm/dd/yyyy format
+#
+# UA strings are potentially valid if they contain one of the following 
+# patterns (note: patterns are case insensitive, but shown in this file in 
+# mixed case for human legibility)
+#
+# Contact ImServices Group in the U.S. (spiders.bots@imservicesgroup.com) or 
+# ABCe in the UK (spiders.bots@abce.org.uk) with any feedback 
+# regarding this file.
+#
+#******************* END OF COMMENTS ******************************************
+AIM|1|1
+AOL/AIM/|1|1
+AOLadServerGifbank|1|1
+AU-MIC|1|1
+AUDIOVOX-|1|1
+Amiga|1|1
+Apple Mac|1|1
+Apple Safari|1|1
+Apple iPhone|1|1
+Apple+Mac|1|1
+Apple+Safari|1|1
+Apple+iPhone|1|1
+BREW|1|0
+BlackBerry|1|1
+Configuration/CLDC|1|0
+Crazy Browser|1|0
+Crazy+Browser|1|0
+DoCoMo|1|1
+DoubleClick SmartCount|1|0
+DoubleClick+SmartCount|1|0
+ERICY-|1|1
+EbGamingClient|1|1
+EbPcExtMng|1|1
+Elinks|1|1
+Emacs-W3|1|1
+Ericsson|1|1
+Eudora|1|0
+Explorer-VeohWebPlayer|1|1
+FeedDemon|1|1
+France Explorer|1|1
+France+Explorer|1|1
+Go.Web/|1|1
+HD-MMD1010/|1|1
+HPiPAQ|1|0
+HTC-|1|1
+HTC_|1|1
+HotJava|1|1
+HuluDesktop|1|1
+IBM WebExplorer|1|1
+IBM+WebExplorer|1|1
+ICE Browser|1|1
+ICE+Browser|1|1
+ICQ|1|1
+Internet Explorer|1|1
+Internet+Explorer|1|1
+J-PHONE/|1|1
+Java|1|1
+KDDI-|1|1
+Klondike|1|0
+Konqueror|1|1
+L-mode/|1|1
+LGE-|1|1
+Lotus SmartCenter|1|1
+Lotus+SmartCenter|1|1
+Lotus-Notes|1|1
+Lynx|1|1
+MOT-|1|1
+MSN Mobile|1|0
+MSN+Mobile|1|0
+Microsoft Internet Explorer|1|1
+Microsoft+Internet+Explorer|1|1
+Microsoft/|1|1
+Moozilla|1|1
+Mosaic|1|1
+Mozilla Compatible|1|1
+Mozilla+Compatible|1|1
+Mozilla/|1|1
+NETCOMplete|1|1
+NSPlayer|1|1
+NetFront|1|0
+Nokia|1|1
+Opera|1|1
+PHILIPS-|1|1
+Palmscape/|1|1
+Panasonic|1|1
+Playstation 3|1|0
+Playstation+3|1|0
+Profile/MIDP|1|0
+QC-/|1|1
+QC6035/|1|1
+RMA/|1|1
+Radio@Netscape|1|1
+Rover|1|1
+Ruckus|1|0
+SEC-/|1|1
+SEC03|1|1
+SKT11SK|1|1
+SMTP|1|1
+Safari|1|1
+Samsung-SGH|1|1
+Sanyo-|1|1
+SiteKiosk|1|0
+SmartDownload|1|1
+SonyEricsson|1|0
+Spinner|1|1
+Sunrise|1|0
+TPSystem|1|1
+UP.Browser|1|0
+UP.Link|1|0
+UP/|1|0
+W3M|1|0
+WapTV/|1|0
+Windows-Media-Player/|1|1
+Wise|1|1
+Xbox Live Client|1|0
+Xbox+Live+Client|1|0
+Y!J2ME|1|1
+Y!MSGR|1|1
+Y!Oasis|1|1
+Y!PHOTOS|1|1
+YInstHelper|1|1
+YJInstHelper|1|1
+YPC|1|1
+YPHOTOS|1|1
+YUMSURL|1|1
+Yahoo!_for_SMS|1|1
+ZTE-|1|1
+aolbrowser|1|1
+gbplugin|1|1
+iCab|1|0
+iPhone|1|1
+iPod touch|1|1
+iPod+touch|1|1
+iTunes|1|0
+#************************************BEGIN DEACTIVATED USER AGENTS HERE*******************************
+#DEACTIVATED USER AGENT|0|1|12/25/2005
+#
+# ***********************************BEGIN MODIFICATION TRACKING**************************************
+# removed QC07 UP.Browser January 2006 as redundant with UP.Browser
+# removed SEC02 UP.Browser January 2006 as redundant with UP.Browser
+# Opera moved from the 44th spot to the 2nd spot and Amiga moved from the 3rd spot to the 6th spot February 2006
+# added BREW, and iCab March 2006
+# removed Mazingo, and DoCoMo April 2006
+# added AOLadServerGifbank April 2006
+# changed SonyEricsson from a start-of-string match to a sub-string match April 2006
+# added Sunrise, Eudora and Klondike May 2006
+# placed a "+" sign for all entries where there was a space to account for IIS user-agent strings, May 2006 
+# added gbplugin June 2006
+# no changes were made for July 2006
+# no changes were made for August 2006
+# added DoCoMo September 2006
+# no changes were made for October 2006
+# no changes were made for November 2006
+# no changes were made for December 2006
+# no changes were made for January 2007
+# no changes were made for February 2007
+# added TPSystem for March 2007
+# no changes were made for April 2007
+# May 2007 - no changes
+# June 2007 - no changes
+# July 2007 - no changes
+# August 2007 - no changes
+# September 2007 - no changes
+# October 2007 - no changes
+# November 2007 - no changes
+# December 2007- added Ruckus
+# January 2008 - added DoubleClick SmartCount and DoubleClick+SmartCount
+# February 2008 - added HPiPAQ
+# March 2008 - no changes
+# April 2008 - added W3M
+# May 2008 - no changes
+# June 2008 - no changes
+# July 2008 - added Xbox Live Client and Xbox+Live+Client, MSN Mobile and MSN+Mobile, SiteKiosk, Crazy Browser and Crazy+Browser
+# August 2008 - no changes
+# September 2008 - no changes
+# October 2008 - added NetFront, Profile/MIDP, Configuration/CLDC
+# November 2008 - added FeedDemon
+# December 2008 - added Samsung-SGH
+# January 2009 - added iTunes
+# February 2009 - no changes
+# March 2009 - no changes
+# April 2009 - no changes
+# May 2009 - no changes
+# June 2009 - no changes
+# July 2009 - added Elinks
+# August 2009 - added HTC- & HTC_
+# September 2009 - added ZTE-, EbPcExtMng, EbGamingClient
+# October 2009 - added Apple iPhone and Apple+iPhone
+# November 2009 - no changes
+# December 2009 - added iPhone, iPod Touch and iPod+touch
+# January 2010 - added Explorer-VeohWebPlayer, Safari, Apple Mac, Apple+Mac, Apple Safari, Apple+Safari, Playstation 3, Playstation+3, HuluDesktop

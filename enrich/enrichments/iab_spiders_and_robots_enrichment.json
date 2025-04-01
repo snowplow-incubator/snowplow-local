@@ -7,15 +7,15 @@
         "parameters": {
             "ipFile": {
                 "database": "ip_exclude_current_cidr.txt",
-                "uri": "gs://bucket-name"
+                "uri": "s3://enrich-assets/"
             },
             "excludeUseragentFile": {
                 "database": "exclude_current.txt",
-                "uri": "gs://bucket-name"
+                "uri": "s3://enrich-assets/"
             },
             "includeUseragentFile": {
                 "database": "include_current.txt",
-                "uri": "gs://bucket-name"
+                "uri": "s3://enrich-assets/"
             }
         }
     }

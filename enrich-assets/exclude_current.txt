@@ -1,0 +1,591 @@
+#
+#	IAB_ABCe_International_Spiders_and_Robots_201001_21-091508
+#	January 21, 2010
+#
+# **********COMMENTS SECTION***************************************************
+#
+# This list has been reviewed by the IAB MTF Spider & Robot Policy Board.
+# This file contains a list of patterns that may be matched against HTTP User 
+# Agent (UA) strings to determine whether that UA matches a known spider or 
+# robot. This is one step of several required for compliance to IAB Advertising
+# Measurement Guidelines.
+#
+# The list is valid for use when counting Client Side Counting (CSC) 
+# transactions. See [http://www.iab.net/iab_products_and_industry_services/508676/guidelines/campaign_measurement_audit]
+# for more info.
+#
+# Rule: If any of these patterns are found to match any string within the HTTP 
+# User-Agent, case insensitively, it is identified as a non-human interaction 
+# and so should be filtered from counts.
+#
+# It is strongly suggested that users analyze their own log data and sort this 
+# list in order of frequency to allow their filter program to work as 
+# efficiently as possible. 
+#
+# This list is provided in good faith but must be used at the user's own risk.  
+# The IAB, ABCe and ImServices accept no responsibility for any 
+# legal, technical or commercial consequences arising from the use of this list.
+#
+# Special characters in this file:
+#	# - (only at the start of a line) this line is a comment 
+#	| - field separator 
+#	, - field separator (Used when multiple exceptions)
+#	blank lines may be present. ignore them.
+#
+#
+# Fields - delimited by a pipe symbol [|]:
+# 1) pattern - case insensitive string to match anywhere in the string
+#	reserved characters are URL-escaped if present (|=%7C #=%23)
+# 2) active flag
+# 1=pattern is active and should be matched
+# 0=pattern is inactive, and should ignored
+# 3) [optional] comma-separated list of exception patterns
+#	reserved characters are URL-escaped if present (|=%7C #=%23 ,=%2C)
+# 4) A an additional flag was added to this list in November 2005 to identify 
+#    those user-agent strings on this list that would not pass the valid user-
+#    agent test and therefore, are redundant if both lists are used.
+#          1=this entry is not needed for those who use a two-pass approach
+#          0=this entry is always needed for both one-pass and two-pass 
+#            approaches
+# 5) Another flag was added to this list when the IAB and ABCe merged their two
+#    lists (01/06) to identify those strings that primarily impact page
+#    impression measurement vs. those strings that primarily impact ad  
+#    impression measurement (or both). The flags are as follows:
+#          0=this entry primarily impacts page impression measurement
+#          1=this entry primarily impacts ad impression measurement
+#          2=this entry impacts both
+# 6) start-of-string flag
+# �        1=pattern must occur at the start of the UA string
+# �        0=pattern may appear anywhere within the UA string
+# 7) **Inactive Date. Inactive Robot List Only.
+# 	mm/dd/yyyy format
+#
+# NOTES:
+# The 3rd column supports an 'exception' feature, which lets the file specify 
+# broadly matching patterns and then allow special cases. For instance, if a UA
+# advertises itself as a 'robot', it should be ignored for counting purposes 
+# unless the string 'robotics' is present, which allows for the counting of US 
+# Robotics cobranded browsers. There may be more than one exception for each 
+# pattern separated by a comma. Please note that use of this field is optional.
+#
+# The 5th column attempts to associate the robot with page impressions or ad
+# impressions (or both) but should be used only as a guide. Application of this
+# list should be based on an analysis of the activity itself before excluding
+# any entries.
+#  
+# UA strings are considered uncountable (per IAB Guidelines) if they contain 
+# any of the following patterns (note: patterns are case insensitive, but left 
+# in this file in mixed case for human legibility)
+#
+# Contact ImServices Group in the U.S. (spiders.bots@imservicesgroup.com) or 
+# ABCe in the UK (spiders.bots@abce.org.uk) with any feedback 
+# regarding this file.
+#
+#******************* END OF COMMENTS ******************************************
+1job|1||0|0|0
+abilon|1||0|0|0
+abot|1||0|0|0
+accoona-ai-agent|1||0|0|0
+agentname|1||0|1|0
+aipbot|1||0|0|0
+aladdino|1||0|0|0
+apachebench|1||0|0|0
+aport|1||0|2|0
+appie|1||0|0|0
+applesyndication|1||0|0|0
+arachnia|1||0|0|0
+aranha|1||0|0|0
+ask jeeves|1||0|0|0
+ask+jeeves|1||0|0|0
+asterias|1||0|0|0
+atomz|1||0|0|0
+avantgo|1||0|2|0
+b2w|1||0|0|0
+backweb|1||0|1|0
+baidu|1||0|0|0
+becomebot|1||0|0|0
+BIMBO|1||0|1|0
+blitzbot|1||0|0|0
+bloglines|1||0|0|0
+bordermanager|1||0|2|0
+bumblebee|1||0|2|0
+CE-Preload|1||0|1|0
+change detection|1||0|0|0
+change+detection|1||0|0|0
+changedetection|1||0|2|0
+charlotte|1||0|1|0
+check_http|1||0|0|0
+chkd|1||0|0|0
+coast|1||0|0|0
+combine|1||0|0|0
+contype|1||0|0|0
+convera|1||0|0|0
+cosmos|1||0|0|0
+crawler|1||0|2|0
+crescent|1||0|1|0
+curl|1||0|0|0
+dialer|1||0|1|0
+Download Ninja|1||1|1|0
+Download+Ninja|1||1|1|0
+dts agent|1||0|2|0
+dts+agent|1||0|2|0
+emailsiphon|1||0|0|0
+eNews Creator|1||0|1|0
+eNews+Creator|1||0|1|0
+favorg|1||0|0|0
+feedonfeeds|1||0|0|0
+fetch|1||0|2|0
+Firehunter|1||0|1|0
+flashget|1||0|0|0
+frontier|1||0|2|0
+geniebot|1||0|0|0
+getright|1||0|1|0
+go!zilla|1||0|1|0
+golem|1||0|1|0
+gomezagent|1||0|2|0
+googlebot|1||0|2|0
+grabber|1||0|0|0
+grub|1||0|0|0
+gulliver|1||0|0|0
+harvest|1||0|1|0
+htdig|1||0|0|0
+httrack|1||0|1|0
+ia_archive|1||0|0|0
+ibot|1||0|0|0
+ichiro|1||0|0|0
+ideare|1||0|0|0
+IEAutoDiscovery|1||0|0|0
+iltrovatore-setaccio|1||0|0|0
+indy library|1||0|2|0
+indy+library|1||0|2|0
+infolink|1||0|1|0
+inktomi search|1||0|0|0
+inktomi+search|1||0|0|0
+internet ninja|1||1|1|0
+internet+ninja|1||1|1|0
+internetseer|1||0|0|0
+ipsentry|1||0|0|0
+irlbot|1||0|0|0
+isilo|1||0|0|0
+jakarta|1||0|0|0
+jobo|1||0|0|0
+justview|1||0|1|0
+keynote|1||0|2|0
+kilroy|1||0|1|0
+kinja|1||0|0|0
+lachesis|1||0|0|0
+larbin|1||0|2|0
+libwww-perl|1||0|1|0
+linkbot|1||0|2|0
+linkchecker|1||0|2|0
+linklint|1||0|0|0
+linkscan|1||0|0|0
+linkwalker|1||0|0|0
+lisa|1||0|0|0
+lwp|1||0|2|0
+lydia|1||0|0|0
+MacReport|1||0|1|0
+magenta|1||0|0|0
+magus bot|1||0|0|0
+magus+bot|1||0|0|0
+mediapartners-google|1||0|0|0
+mfc_tear_sample|1||0|0|0
+microsoft scheduled cache content download service|1||0|0|0
+microsoft url control|1||1|2|0
+microsoft+scheduled+cache+content+download+service|1||0|0|0
+microsoft+url+control|1||1|2|0
+mirago|1||0|0|0
+missigua|1||0|0|0
+miva|1||0|0|0
+mj12bot|1||0|0|0
+mobipocket webcompanion|1||0|2|0
+mobipocket+webcompanion|1||0|2|0
+monitor|1||0|1|0
+monster|1||0|1|0
+mozilla/5.0 (compatible; msie 5.0)|1||0|2|0
+mozilla/5.0+(compatible;+msie+5.0)|1||0|2|0
+ms frontpage|1||0|1|0
+MS Search|1||0|1|0
+ms+frontpage|1||0|1|0
+MS+Search|1||0|1|0
+MSNPTC|1||1|1|0
+nbot|1||0|0|0
+netmechanic|1||0|0|0
+newsbot|1||0|0|0
+newsnow|1||0|0|0
+nextgensearchbot|1||0|0|0
+ng/2.0|1||0|0|0
+nomad|1||0|1|0
+npbot|1||0|2|0
+nutch|1||0|0|0
+nutscrape|1||0|0|0
+ocelli|1||0|0|0
+omniexplorer|1||0|0|0
+openfind|1||0|0|0
+oracle ultra search|1||0|0|0
+oracle+ultra+search|1||0|0|0
+patric|1||0|1|0
+perman surfer|1||0|1|0
+perman+surfer|1||0|1|0
+pioneer|1||0|1|0
+pluck|1||0|0|0
+plumtree|1||0|0|0
+polybot|1||0|0|0
+pompos|1||0|0|0
+port huron labs|1||0|0|0
+port+huron+labs|1||0|0|0
+powermarks|1||0|1|0
+psbot|1||0|0|0
+pulpfiction|1||0|0|0
+rpt-http|1||0|2|0
+rss client|1||0|0|0
+rss+client|1||0|0|0
+rssmaker-ng|1||0|0|0
+rssreader|1||0|0|0
+rufusbot|1||0|0|0
+schmozilla|1||0|0|0
+scooter|1||0|0|0
+seekbot|1||0|0|0
+sherlock|1||0|0|0
+shopwiki|1||0|0|0
+slurp|1||0|2|0
+slysearch|1||0|0|0
+snooper|1||0|0|0
+sohu|1||0|0|0
+spider|1||0|2|0
+spike|1||0|1|0
+spyder|1||0|2|0
+stackrambler|1||0|0|0
+stuff|1||0|2|0
+sucker|1||0|1|0
+taz|1||0|1|0
+teleport|1||0|2|0
+templeton|1||0|1|0
+/teoma|1||0|0|0
+thunderstone|1||0|1|0
+t-h-u-n-d-e-r-s-t-o-n-e|1||0|1|0
+topix|1||0|0|0
+ukonline|1||0|0|0
+ultraseek|1||0|0|0
+urchin|1||0|0|0
+urlcheck|1||0|0|0
+vagabondo|1||0|0|0
+versus|1||0|0|0
+voyager|1||0|2|0
+web downloader|1||0|1|0
+web+downloader|1||0|1|0
+webauto|1||0|1|0
+webcapture|1||0|2|0
+webcheck|1||0|0|0
+webclipping.com|1||0|0|0
+WebCopier|1||1|1|0
+webcrawl|1||0|2|0
+webdup|1||0|2|0
+webinator|1||0|2|0
+website extractor|1||0|2|0
+website+extractor|1||0|2|0
+webtool|1||0|1|0
+webtrends|1||0|0|0
+webwasher|1||0|0|0
+webzip|1||0|1|0
+wget|1||0|2|0
+worm|1||0|2|0
+xenu|1||0|0|0
+yacy|1||0|0|0
+yandex|1||0|0|0
+zealbot|1||0|0|0
+zeus|1||0|0|0
+zipppbot|1||0|0|0
+zyborg|1||0|0|0
+ez publish link validator|1||0|0|0
+ez+publish+link+validator|1||0|0|0
+Goldfire|1||0|0|0
+SiteVigil|1||0|0|0
+EmailSmartz|1||0|0|0
+iOpus-I-M|1||0|0|0
+BITS|1||0|0|0
+heritrix|1||0|0|0
+Freedom|1||0|2|0
+yahoofeedseeker|1||0|2|0
+internal zero-knowledge agent|1||0|2|0
+internal+zero-knowledge+agent|1||0|2|0
+NaverBot|1||0|2|0
+SurveyBot/|1||0|2|0
+Liferea|1||0|2|0
+YahooSeeker|1||0|2|0
+FindLinks|1||0|2|0
+psycheclone|1||0|0|0
+oodlebot|1||0|2|0
+mackster|1||0|2|0
+AdsBot-Google|1||0|1|0
+InnovantageBot|1||0|2|0
+192.comAgent|1||0|0|0
+NASA Search|1||0|0|0
+KHTE|1||0|2|0
+KTXN|1||0|2|0
+AutoMapIt|1||0|2|0
+Advanced Email Extractor|1||0|2|0
+Advanced+Email+Extractor|1||0|2|0
+MSRBOT|1||0|2|0
+Moreoverbot|1||0|2|0
+news reader|1||0|2|0
+news+reader|1||0|2|0
+webbot|1||0|2|0
+FeedFetcher|1||0|2|0
+HTTP-WebTest|1||0|2|0
+Forex Trading Network Organization|1||0|2|0
+Forex+Trading+Network+Organization|1||0|2|0
+newstin|1||0|2|0
+search_comments\at\sensis\dot\com\dot\au|1||0|0|0
+panscient.com|1||0|2|0
+Snoopy|1||0|2|0
+JDXROBOT|1||0|2|0
+bot/1.0|1||0|2|0
+Jumpbot|1||0|2|0
+N-central|1||0|2|0
+Globrix|1||0|2|0
+AOL_CAP|1||0|2|0
+Pagebull|1||1|2|0
+UniversalSearch|1||0|2|0
+Hoopla|1||1|2|0
+Maxamine|1||0|2|0
+Argus|1||0|2|0
+Google Wireless Transcoder|1||0|1|0
+Google+Wireless+Transcoder|1||0|1|0
+ClickAJob|1||1|2|0
+JobRapido|1||0|2|0
+WebNews Arianna|1||1|2|0
+WebNews+Arianna|1||1|2|0
+CogisumBot|1||1|2|0
+Python-urllib|1||1|2|0
+LiteFinder|1||0|2|0
+iSearch|1||0|2|0
+http://bot.ims.ca|1||0|2|0
+Pricerunner|1||0|2|0
+System Center Operations Manager|1||1|2|0
+System+Center+Operations+Manager|1||1|2|0
+nettraffic sensor|1||0|2|0
+nettraffic+sensor|1||0|2|0
+D1GArabicEngine|1||0|2|0
+JoeDog|1||1|2|0
+ShablastBot|1||1|2|0
+websitepulse|1||1|2|0
+BitvoUserAgent|1||0|2|0
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;1813)|1||0|2|0
+Mozilla/4.0+(compatible;+MSIE+6.0;+Windows+NT+5.1;1813)|1||0|2|0
+Swish-e|1||1|2|0
+ContentSmartz|1||1|2|0
+Quintura-crw|1||1|2|0
+Paros|1||0|2|0
+MSNRV|1||0|2|0
+Kalooga|1||1|2|0
+Watchmouse|1||1|2|0
+PureLoad|1||1|2|0
+Proximic|1||0|2|0
+Powerset|1||0|2|0
+Yahoo-RichAbstracts|1||0|2|0
+Scoutjet|1||0|2|0
+Twiceler|1||1|2|0
+Twingly|1||0|2|0
+Attributor|1||0|2|0
+Pingdom|1||1|2|0
+Europarchive|1||0|2|0
+Search-Engine-Studio|1||1|2|0
+Yanga|1||1|2|0
+Webmetrics|1||0|2|0
+irc search|1||1|2|0
+irc+search|1||1|2|0
+vivisimo|1||0|2|0
+onkosh|1||0|2|0
+holmes|1||1|2|0
+AlertSite|1||0|2|0
+Sphere Scout|1||1|2|0
+Sphere+Scout|1||1|2|0
+Yahoo Pipes|1||0|2|0
+Yahoo+Pipes|1||0|2|0
+SimplePie|1||1|2|0
+Drupal|1||1|2|0
+HTMLParser|1||1|2|0
+Busiversebot|1||1|2|0
+Watchfire WebXM|1||1|2|0
+Watchfire+WebXM|1||1|2|0
+SnapPreviewBot|1||0|2|0
+SnapBot|1||0|2|0
+DAUMOA|1||0|2|0
+SkreemRBot|1||0|2|0
+C4BOT|1||1|2|0
+LucidMedia ClickSense|1||1|2|0
+LucidMedia+ClickSense|1||1|2|0
+Nielsen ADR|1||0|2|0
+Nielsen+ADR|1||0|2|0
+evrinid|1||0|2|0
+robtexbot|1||0|2|0
+FDM 3.x|1||1|2|1
+FDM+3.x|1||1|2|1
+WebGrab|1||1|2|1
+iSense|1||0|2|0
+business-semantics|1||1|2|0
+Trovit|1||0|2|0
+RiverglassScanner|1||1|2|0
+Wepbot|1||1|2|0
+MLBot|1||1|2|0
+Siteimprove|1||1|2|0
+Ruby|1||0|2|0
+Apache-HttpClient|1||1|2|0
+SiteAlarm|1||0|2|0
+archive.org|1||0|2|0
+VocusBot|1||0|2|0
+echo|1|bonecho|0|1|0
+fast|1|fastbar|0|0|0
+motor|1|motorola|0|1|0
+obot|1|robotics|0|0|0
+pita|1|hospital|0|1|0
+robot|1|robotics|0|2|0
+spinne|1|spinner|0|2|0
+# ***********************************BEGIN INACTIVE ROBOT LIST**************************************
+#247sitewatch|0||0|0|0|12/25/2009
+#Enfish Tracker|0||0|1|0|12/25/2009
+#Enfish+Tracker|0||0|1|0|12/25/2009
+#art-online.com|0||0|0|0|12/25/2009
+#avsearch|0||0|0|0|12/25/2009
+#bigbrother|0||0|0|0|12/25/2009
+#c r a w l e r|0||0|2|0|12/25/2009
+#c+r+a+w+l+e+r|0||0|2|0|12/25/2009
+#checkurl|0||0|0|0|12/25/2009
+#cometsearch|0||0|0|0|12/25/2009
+#copernicenterprisesearch|0||0|0|0|12/25/2009
+#copyrightcheck|0||0|0|0|12/25/2009
+#crucial inforation miner|0||0|0|0|12/25/2009
+#crucial+inforation+miner|0||0|0|0|12/25/2009
+#diphonet|0||0|0|0|12/25/2009
+#dtaagent|0||0|0|0|12/25/2009
+#earthcom.info|0||0|0|0|12/25/2009
+#filehound|0||0|0|0|12/25/2009
+#freefind|0||0|0|0|12/25/2009
+#hapax|0||0|0|0|12/25/2009
+#hit list|0||0|0|0|12/25/2009
+#hit+list|0||0|0|0|12/25/2009
+#hitlist|0||0|0|0|12/25/2009
+#infoseek|0||0|0|0|12/25/2009
+#inverse ip insight|0||0|0|0|12/25/2009
+#inverse+ip+insight|0||0|0|0|12/25/2009
+#janrain-lobster|0||0|0|0|12/25/2009
+#jetbot|0||0|0|0|12/25/2009
+#keepalive|0||0|0|0|12/25/2009
+#kummhttp|0||0|0|0|12/25/2009
+#linksweeper|0||0|0|0|12/25/2009
+#locust|0||0|0|0|12/25/2009
+#lotusdiscovery|0||0|0|0|12/25/2009
+#mac finder|0||0|0|0|12/25/2009
+#mac+finder|0||0|0|0|12/25/2009
+#markwatch|0||0|1|0|12/25/2009
+#mazingo|0||0|0|0|12/25/2009
+#mazzilla|0||0|0|0|12/25/2009
+#mercator|0||0|0|0|12/25/2009
+#microsoft internet explorer/4.40.426 (windows 95)|0||0|0|0|12/25/2009
+#microsoft+internet+explorer/4.40.426+(windows+95)|0||0|0|0|12/25/2009
+#minuteman|0||0|0|0|12/25/2009
+#moget|0||0|0|0|12/25/2009
+#monkeycrawl|0||0|0|0|12/25/2009
+#mothra/126-paladium|0||0|0|0|12/25/2009
+#mozilla 2.0 (compatible; msie 3.02; update a; windows nt)|0||0|0|0|12/25/2009
+#mozilla+2.0+(compatible;+msie+3.02;+update+a;+windows+nt)|0||0|0|0|12/25/2009
+#nalanda|0||0|0|0|12/25/2009
+#nessus|0||0|0|0|12/25/2009
+#new/0.1libwww|0||0|0|0|12/25/2009
+#news search|0||0|0|0|12/25/2009
+#news+search|0||0|0|0|12/25/2009
+#newsapp|0||0|0|0|12/25/2009
+#newslookup|0||0|0|0|12/25/2009
+#newsmachine|0||0|0|0|12/25/2009
+#newssearch|0||0|0|0|12/25/2009
+#proxysg|0||0|0|0|12/25/2009
+#quepasacreep|0||0|0|0|12/25/2009
+#rational sitecheck|0||0|0|0|12/25/2009
+#rational+sitecheck|0||0|0|0|12/25/2009
+#realnamesbot|0||0|0|0|12/25/2009
+#sawaalrobo|0||0|0|0|12/25/2009
+#scirus|0||0|0|0|12/25/2009
+#scoutabout|0||0|0|0|12/25/2009
+#search.ch|0||0|0|0|12/25/2009
+#seeker.lookseek.com|0||0|0|0|12/25/2009
+#servers alive|0||0|0|0|12/25/2009
+#servers+alive|0||0|0|0|12/25/2009
+#sitescooper|0||0|0|0|12/25/2009
+#squid cache|0||0|1|0|12/25/2009
+#squid+cache|0||0|1|0|12/25/2009
+#sundoh search|0||0|0|0|12/25/2009
+#sundoh+search|0||0|0|0|12/25/2009
+#szukacz|0||0|0|0|12/25/2009
+#terrawizbot|0||0|0|0|12/25/2009
+#webextractor|0||0|0|0|12/25/2009
+#webvac|0||0|0|0|12/25/2009
+#wfarc|0||0|0|0|12/25/2009
+#whatsup|0||0|2|0|12/25/2009
+#whistleblower|0||0|0|0|12/25/2009
+#whizbang|0||0|0|0|12/25/2009
+#yotta|0||0|0|0|12/25/2009
+#zibber|0||0|0|0|12/25/2009
+#
+# **************BEGIN MODIFICATION TRACKING*********************
+# removed abachobot, e-societyrobot, exabot, gais robot, gais+robot, gigabot, girafabot, linbot, lycos monitoring robot, lycos+monitoring+robot, msnbot, nabot, rabot, rpt-httpclient, synobot, turnitinbot, voilabot, and www.server-monitoring.co.uk January 2006
+# added ez publish link validator, ez+publish+link+validator, whistleblower, terrawizbot, and topix.net January 2006
+# If a sub-string match of "obot" is found, it is valid if the full term is "robotics".  If a sub-string match of "spinne" is found, it is valid if the full term is "spinner".  January 2006
+# added Goldfire, Site Vigil, EmailSmartz, iOpus-I-M, and BITS February 2006
+# added heritrix March 2006
+# removed topix.net March 2006
+# added c r a w l e r (c+r+a+w+l+e+r), Freedom, internal zero-knowledge agent (internal+zero-knowledge+agent), and yahoofeedseeker April 2006
+# removed Yahoo, newwave-lisa, and ipswitch_whatsup April 2006
+# added NaverBot, SurveyBot/, Liferea, and NetNewsWire May 2006
+# If a sub-string match of "fast" is found, it is valid if the full term is "fastbar".  If a sub-string match of "motor" is found, it is valid if the full term is "motorola".  May 2006
+# added TPSystem June 2006
+# added YahooSeeker, FindLinks, and psycheclone July 2006
+# added oodlebot, mackster, AdsBot-Google, and InnovantageBot August 2006
+# added 192.comAgent and NASA Search September 2006
+# added KHTE and KTXN (these are related to keynote) September 2006
+# added DigExt September 2006
+# removed DoCoMo September 2006
+# added AutoMapIt October 2006
+# removed DigExt October 2006
+# no changes were made for November 2006
+# added Advanced Email Extractor (Advanced+Email+Extractor), MSRBOT, Moreoverbot, and search_comments\at\sensis\dot\com\dot\au December 2006
+# removed sensis December 2006
+# added (1) HTTP-WebTest, (2) Forex Trading Network Organization, (3) Forex+Trading+Network+Organization January 2007
+# added (1) news reader (2) news+reader (3) webbot & (4) FeedFetcher February 2007
+# Inadvertently removed from February 2007 List (1) HTTP-WebTest, (2) Forex Trading Network Organization, (3) Forex+Trading+Network+Organization
+# added back (1) HTTP-WebTest, (2) Forex Trading Network Organization, (3) Forex+Trading+Network+Organization March 2007
+# added newstin, removed TPSystem March 2007
+# April 2007 - Added (1) panscient.com, (2) Snoopy & (3) JDXROBOT
+# May 2007 - (1) Heritrix updated - 4th flag changed to 0, (2) Echo updated - exception "bonecho" added.
+# June 2007 - (1) bot/1.0 added.
+# July 2007 - (1) Jumpbot, (2) N-central, & (3) Globrix added.
+# August 2007 - no changes
+# September 2007 - (1) AOL_CAP, (2) Pagebull, (3) UniversalSearch, & (4) Hoopla
+# October 2007 - (1) Maxamine, (2) Argus, (3) Google Wireless Transcoder
+# November 2007 - (1) ClickAJob, (2) JobRapido, (3) WebNews Arianna, (4) WebNews+Arianna
+# December 2007 - (1) CogisumBot, (2) Python-urllib, (3) LiteFinder, (4) iSearch, (5) http://bot.ims.ca
+# January 2008 - (1) Pricerunner
+# February 2008 - (1) System Center Operations Manager, (2) System+Center+Operations+Manager
+# March 2008 - (1) nettraffic sensor (2) nettraffic+sensor (3) D1GArabicEngine
+# April 2008 - (1) JoeDog (2) ShablastBot
+# May 2008 - (1) websitepulse (2) BitvoUserAgent
+# June 2008 - (1) AVG string (2) Swish-e (3) ContentSmartz (4) Quintura-crw
+# July 2008 - (1) Paros (2) MSNRV (3) Kalooga (4) Watchmouse (5) PureLoad
+# August 2008 - (1) Proximic (2) Powerset (3) Yahoo-RichAbstracts (4) Scoutjet (5) Twiceler (6) Twingly
+# September 2008 - (1) Attributor (2) Pingdom
+# October 2008 - (1) Europarchive
+# November 2008 - (1) Search-Engine-Studio (2) iRc Search (3) iRc+Search (4) Yanga (5) Webmetrics (6) DoubleVerify Crawler (7) DoubleVerify+Crawler (8) Newsgator was removed
+# December 2008 - (1) vivisimo (2) onkosh (3) holmes (4) removed netnewswire (5) removed newsfire (6) removed doubleverify crawler and doubleverify+crawler
+# January 2009 - (1) AlertSite (2) Sphere Scout (3) Sphere+Scout (4) Yahoo Pipes (5) Yahoo+Pipes
+# February 2009 - (1) SimplePie (2) Drupal (3) HTMLParser (4) Busiversebot (5) Watchfire WebXM (6) Watchfire+WebXM
+# March 2009 - (1) SnapPreviewBot (2) SnapBot (3) DAUMOA
+# April 2009 - (1) Removed "ync" (2) SkreemRBot (3) C4BOT
+# May 2009 - no changes
+# June 2009 - (1) LucidMedia ClickSense (2) LucidMedia+ClickSense.  NOTE: The 4th flag for 30 bots were updated from a "1" to a "0".
+# July 2009 - (1) Nielsen ADR (2) Nielsen+ADR. NOTE: A 6th flag was added to identify a start-of-string pattern - 1=pattern must occur at the start of the UA string, 0=pattern may appear anywhere within the UA string
+# August 2009 - (1) evrinid
+# September 2009 - (1) robtexbot (2) FDM 3.x (3) FDM+3.x (4) WebGrab
+# October 2009 - no changes
+# November 2009 - (1) iSense (2) business-semantics (3) Trovit (4) RiverglassScanner
+# December 2009 - (1) Wepbot (2) MLBot (3) Siteimprove.  This is also the first time that inactive bots have been removed (i.e., those bots that have not surfaced during the past 12 months). Inactive bots will be removed on a semi-annual basis going forward (i.e., June & December).
+# January 2010 - (1) Ruby (2) Apache-HttpClient (3) SiteAlarm (4) SiteAlarmarchive.org (5) VocusBot
