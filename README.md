@@ -24,6 +24,7 @@ Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) 
 - Write enriched data to remote destinations (including S3, GCS etc)
 - Test and validate Snowbridge configurations
 - Send events remotely from another machine to your local pipeline (via `--profile tunnel`)
+- Query data locally using DuckDB (when using the Lake Loader and Iceberg or Delta format)
 
 ## Licensing
 
@@ -151,6 +152,28 @@ The storage for Grafana is also mounted as a volume so you can persist any dashb
 ## Tunneling
 
 By using the `--profile tunnel` flag this will start a ngrok tunnel locally that enables traffic forwarding from an arbitrary URL to your local collector. You can configure this forwarding URL and other settings in `tunnel/ngrok.yml` by copying over the example file - `ngrok.yml.example`. In addition you can configure security settings (e.g., only allowing traffic from certain IP ranges / CIDRs) by customising the `ngrok/policy.yml` file. For more configuration options see the ngrok agent config documentation [here](https://ngrok.com/docs/agent/config/v3/).
+
+## Querying data using DuckDB
+
+If you are using the Lake Loader to write to the local filesystem or S3 (see an example of this in `lake_loader_config_iceberg_s3.hocon`) you can use DuckDB to query the data that is written out. 
+
+If the Lake Loader is configured to write locally to the `/data` directory this is automatically mirrored by Docker Compose onto your local file system to the `database/` directory.
+
+To do this you should:
+1. [Download](https://duckdb.org/docs/installation) and install the DuckDB client.
+2. Open a new terminal and enter `duckdb -ui` to start the DuckDB user interface.
+3. Visit the URL for the interface and create a new notebook.
+4. Enter the following queries into a cell to load data from your file system and make it queryable, ensuring that the path to snowplow-local is correct on your host machine.
+
+```sql
+INSTALL iceberg;
+LOAD iceberg;
+SET unsafe_enable_version_guessing = true;
+create view events AS (SELECT * FROM iceberg_scan('~/snowplow-local/database/atomic/events/', metadata_compression_codec='gzip', allow_moved_paths=true))
+SELECT COUNT(*) FROM events;
+```
+
+If you are writing using the Delta format use the [Delta extension](https://duckdb.org/docs/stable/extensions/delta.html) and `delta_scan` instead.
 
 ## Gotchas
 
