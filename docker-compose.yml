@@ -227,6 +227,7 @@ services:
     volumes:
       - "./loaders/lake_loader_config_iceberg_s3.hocon:/loaders/lake_loader_config.hocon"
       - "./iglu-client:/snowplow/iglu-client"
+      - "./database/:/data/" # allows mirroring between the container FS and host FS of events data
     profiles: [lake-loader]
     environment:
       - "ACCEPT_LICENSE=${ACCEPT_LICENSE}"

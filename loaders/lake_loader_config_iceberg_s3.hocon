@@ -22,7 +22,8 @@
       "type": "Iceberg",
       "database": "atomic"
       "table": "events"
-      "location": "s3a://snowplow-lake-loader/events" # this can also be S3!
+      # "location": "s3a://snowplow-lake-loader/events" # this can also be S3!
+      "location": "/data/"
       "catalog": {
         "type": "Hadoop"
       }
