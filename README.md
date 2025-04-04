@@ -159,17 +159,19 @@ If you are using the Lake Loader to write to the local filesystem or S3 (see an 
 
 If the Lake Loader is configured to write locally to the `/data` directory this is automatically mirrored by Docker Compose onto your local file system to the `database/` directory.
 
+You should `chmod 777 ./database` to ensure this directly can be written to by the Lake Loader if writes fail.
+
 To do this you should:
 1. [Download](https://duckdb.org/docs/installation) and install the DuckDB client.
 2. Open a new terminal and enter `duckdb -ui` to start the DuckDB user interface.
 3. Visit the URL for the interface and create a new notebook.
-4. Enter the following queries into a cell to load data from your file system and make it queryable, ensuring that the path to snowplow-local is correct on your host machine.
+4. Enter the following queries into a cell to load data from your file system and make it queryable, ensuring that the path to snowplow-local is correct on your host machine (this query will fail if no data has been written yet by the loader).
 
 ```sql
 INSTALL iceberg;
 LOAD iceberg;
 SET unsafe_enable_version_guessing = true;
-create view events AS (SELECT * FROM iceberg_scan('~/snowplow-local/database/atomic/events/', metadata_compression_codec='gzip', allow_moved_paths=true))
+create view events AS (SELECT * FROM iceberg_scan('./database/atomic/events/', metadata_compression_codec='gzip', allow_moved_paths=true));
 SELECT COUNT(*) FROM events;
 ```
 
