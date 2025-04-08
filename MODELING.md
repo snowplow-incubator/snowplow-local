@@ -8,7 +8,7 @@ This package is designed for local use and development, you should avoid running
 
 ### Running
 
-You can find the raw SQL for creating the tables and seeds in `database/unified.sql`. If you wish to run this logic in a notebook (recommended) you can load these queries automatically into a DuckDB notebook by running `duckdb -ui -init unified_notebook.sql`.
+You can find the raw SQL for creating the tables and seeds in `database/unified.sql`. If you wish to run this logic in a notebook (recommended for debugging or customizing) you can load these queries automatically into a DuckDB notebook by copying the contents of `database/unified_notebook.sql` into the cell of a new or existing notebook and hitting 'Run' on the cell. This will create a new notebook called 'Snowplow Unified models' that has multiple cells for each of the models that you can run and customize interactively.
 
 
 ### Supported variables

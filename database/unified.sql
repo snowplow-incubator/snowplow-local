@@ -10,10 +10,10 @@ LOAD iceberg;
 create view test_view AS (SELECT * FROM iceberg_scan('./database/atomic/events/', metadata_compression_codec='gzip', allow_moved_paths=true));
 
 -- create tables from seeds
-create table unified_dim_geo_country_mapping AS (SELECT * FROM read_csv('./database/snowplow_unified_dim_geo_country_mapping.csv'));
-create table unified_dim_rfc_5646_language_mapping AS (SELECT * FROM read_csv('./database/snowplow_unified_dim_rfc_5646_language_mapping.csv'));
-create table unified_dim_iso_639_2t AS (SELECT * FROM read_csv('./database/snowplow_unified_dim_iso_639_2t.csv'));
-create table unified_dim_iso_639_3 AS (SELECT * FROM read_csv('./database/snowplow_unified_dim_iso_639_3.csv'));
+create table unified_dim_geo_country_mapping AS (SELECT * FROM read_csv('https://raw.githubusercontent.com/snowplow/dbt-snowplow-unified/refs/heads/main/seeds/snowplow_unified_dim_geo_country_mapping.csv'));
+create table unified_dim_rfc_5646_language_mapping AS (SELECT * FROM read_csv('https://raw.githubusercontent.com/snowplow/dbt-snowplow-unified/refs/heads/main/seeds/snowplow_unified_dim_rfc_5646_language_mapping.csv'));
+create table unified_dim_iso_639_2t AS (SELECT * FROM read_csv('https://raw.githubusercontent.com/snowplow/dbt-snowplow-unified/refs/heads/main/seeds/snowplow_unified_dim_iso_639_2t.csv'));
+create table unified_dim_iso_639_3 AS (SELECT * FROM read_csv('https://raw.githubusercontent.com/snowplow/dbt-snowplow-unified/refs/heads/main/seeds/snowplow_unified_dim_iso_639_3.csv'));
 
 -- START: set your settings here
 SET VARIABLE app_id = ['snowplow-local']; -- all app_ids if empty
@@ -64,6 +64,7 @@ drop view if exists refined;
 create view refined AS (SELECT * from query(getvariable('q')));
 
 -- START: Unified events
+
 DROP VIEW IF EXISTS unified_events; -- drop existing view if required
 
 CREATE VIEW unified_events AS
@@ -80,9 +81,12 @@ WITH identified_events AS (
 base_query AS (
     SELECT
         a.*,
-        a.domain_userid AS user_identifier
+        COALESCE(
+            COALESCE(contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'sessionId', NULL),
+            domain_sessionid, 
+            NULL
+        ) AS user_identifier,
     FROM identified_events a
-    WHERE 1=1
     QUALIFY ROW_NUMBER() OVER (PARTITION BY a.event_id ORDER BY a.collector_tstamp, a.dvce_created_tstamp) = 1
 ),
 
@@ -92,109 +96,109 @@ base_query_2 AS (
     , contexts_com_snowplowanalytics_snowplow_web_page_1[1]->>'id' AS page_view__id
   
   , contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'category' AS iab__category
-  , contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'primaryImpact' AS iab__primary_impact
+  , contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'primary_impact' AS iab__primary_impact
   , contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'reason' AS iab__reason
-  , try_cast(contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'spiderOrRobot' AS BOOLEAN) AS iab__spider_or_robot
+  , try_cast(contexts_com_iab_snowplow_spiders_and_robots_1[1]->>'spider_or_robot' AS BOOLEAN) AS iab__spider_or_robot
 
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragentFamily' AS ua__useragent_family
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragentMajor' AS ua__useragent_major
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragentMinor' AS ua__useragent_minor
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragentPatch' AS ua__useragent_patch
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragentVersion' AS ua__useragent_version
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osFamily' AS ua__os_family
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osMajor' AS ua__os_major
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osMinor' AS ua__os_minor
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osPatch' AS ua__os_patch
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osPatchMinor' AS ua__os_patch_minor
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'osVersion' AS ua__os_version
-  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'deviceFamily' AS ua__device_family
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragent_family' AS ua__useragent_family
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragent_major' AS ua__useragent_major
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragent_minor' AS ua__useragent_minor
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragent_patch' AS ua__useragent_patch
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'useragent_version' AS ua__useragent_version
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_family' AS ua__os_family
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_major' AS ua__os_major
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_minor' AS ua__os_minor
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_patch' AS ua__os_patch
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_patch_minor' AS ua__os_patch_minor
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'os_version' AS ua__os_version
+  , contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[1]->>'device_family' AS ua__device_family
 
-  , contexts_nl_basjes_yauaa_context_1[1]->>'deviceClass' AS yauaa__device_class
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentClass' AS yauaa__agent_class
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentName' AS yauaa__agent_name
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentNameVersion' AS yauaa__agent_name_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentNameVersionMajor' AS yauaa__agent_name_version_major
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentVersion' AS yauaa__agent_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'agentVersionMajor' AS yauaa__agent_version_major
-  , contexts_nl_basjes_yauaa_context_1[1]->>'deviceBrand' AS yauaa__device_brand
-  , contexts_nl_basjes_yauaa_context_1[1]->>'deviceName' AS yauaa__device_name
-  , contexts_nl_basjes_yauaa_context_1[1]->>'deviceVersion' AS yauaa__device_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineClass' AS yauaa__layout_engine_class
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineName' AS yauaa__layout_engine_name
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineNameVersion' AS yauaa__layout_engine_name_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineNameVersionMajor' AS yauaa__layout_engine_name_version_major
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineVersion' AS yauaa__layout_engine_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'layoutEngineVersionMajor' AS yauaa__layout_engine_version_major
-  , contexts_nl_basjes_yauaa_context_1[1]->>'operatingSystemClass' AS yauaa__operating_system_class
-  , contexts_nl_basjes_yauaa_context_1[1]->>'operatingSystemName' AS yauaa__operating_system_name
-  , contexts_nl_basjes_yauaa_context_1[1]->>'operatingSystemNameVersion' AS yauaa__operating_system_name_version
-  , contexts_nl_basjes_yauaa_context_1[1]->>'operatingSystemVersion' AS yauaa__operating_system_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'device_class' AS yauaa__device_class
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_class' AS yauaa__agent_class
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_name' AS yauaa__agent_name
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_name_version' AS yauaa__agent_name_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_name_version_major' AS yauaa__agent_name_version_major
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_version' AS yauaa__agent_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'agent_version_major' AS yauaa__agent_version_major
+  , contexts_nl_basjes_yauaa_context_1[1]->>'device_brand' AS yauaa__device_brand
+  , contexts_nl_basjes_yauaa_context_1[1]->>'device_name' AS yauaa__device_name
+  , contexts_nl_basjes_yauaa_context_1[1]->>'device_version' AS yauaa__device_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_class' AS yauaa__layout_engine_class
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_name' AS yauaa__layout_engine_name
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_name_version' AS yauaa__layout_engine_name_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_name_version_major' AS yauaa__layout_engine_name_version_major
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_version' AS yauaa__layout_engine_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'layout_engine_version_major' AS yauaa__layout_engine_version_major
+  , contexts_nl_basjes_yauaa_context_1[1]->>'operating_system_class' AS yauaa__operating_system_class
+  , contexts_nl_basjes_yauaa_context_1[1]->>'operating_system_name' AS yauaa__operating_system_name
+  , contexts_nl_basjes_yauaa_context_1[1]->>'operating_system_name_version' AS yauaa__operating_system_name_version
+  , contexts_nl_basjes_yauaa_context_1[1]->>'operating_system_version' AS yauaa__operating_system_version
 
   , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'viewport' AS browser__viewport
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'documentSize' AS browser__document_size
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'document_size' AS browser__document_size
   , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'resolution' AS browser__resolution
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'colorDepth'::INT AS browser__color_depth
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'devicePixelRatio' AS browser__device_pixel_ratio
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'cookiesEnabled' AS browser__cookies_enabled
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'color_depth'::INT AS browser__color_depth
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'device_pixel_ratio' AS browser__device_pixel_ratio
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'cookies_enabled' AS browser__cookies_enabled
   , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'online' AS browser__online
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'browserLanguage' AS browser__browser_language
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'documentLanguage' AS browser__document_language
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'browser_language' AS browser__browser_language
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'document_language' AS browser__document_language
   , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'webdriver' AS browser__webdriver
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'deviceMemory' AS browser__device_memory
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'hardwareConcurrency' AS browser__hardware_concurrency
-  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'tabId' AS browser__tab_id
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'device_memory' AS browser__device_memory
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'hardware_concurrency' AS browser__hardware_concurrency
+  , contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'tab_id' AS browser__tab_id
 
 
-        , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'id' AS screen_view__id
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'name' AS screen_view__name
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previousId' AS screen_view__previous_id
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previousName' AS screen_view__previous_name
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previousType' AS screen_view__previous_type
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'transitionType' AS screen_view__transition_type
-      , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'type' AS screen_view__type
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'id' AS screen_view__id
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'name' AS screen_view__name
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previous_id' AS screen_view__previous_id
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previous_name' AS screen_view__previous_name
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'previous_type' AS screen_view__previous_type
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'transition_type' AS screen_view__transition_type
+  , unstruct_event_com_snowplowanalytics_mobile_screen_view_1->>'type' AS screen_view__type
   
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'sessionId' AS session__session_id
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'sessionIndex' AS session__session_index
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'previousSessionId' AS session__previous_session_id
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'userId' AS session__user_id
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'firstEventId' AS session__first_event_id
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'eventIndex' AS session__event_index
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'storageMechanism' AS session__storage_mechanism
-  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'firstEventTimestamp' AS session__first_event_timestamp
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'session_id' AS session__session_id
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'session_index' AS session__session_index
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'previous_session_id' AS session__previous_session_id
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'user_id' AS session__user_id
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'first_event_id' AS session__first_event_id
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'event_index' AS session__event_index
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'storage_mechanism' AS session__storage_mechanism
+  , contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'first_event_timestamp' AS session__first_event_timestamp
 
 
 
-        , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'deviceManufacturer' AS mobile__device_manufacturer
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'deviceModel' AS mobile__device_model
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'osType' AS mobile__os_type
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'osVersion' AS mobile__os_version
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'androidIdfa' AS mobile__android_idfa
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'appleIdfa' AS mobile__apple_idfa
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'appleIdfv' AS mobile__apple_idfv
+        , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'device_manufacturer' AS mobile__device_manufacturer
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'device_model' AS mobile__device_model
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'os_type' AS mobile__os_type
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'os_version' AS mobile__os_version
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'android_idfa' AS mobile__android_idfa
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'apple_idfa' AS mobile__apple_idfa
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'apple_idfv' AS mobile__apple_idfv
       , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'carrier' AS mobile__carrier
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'openIdfa' AS mobile__open_idfa
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'networkTechnology' AS mobile__network_technology
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'networkType' AS mobile__network_type
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'physicalMemory' AS mobile__physical_memory
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'systemAvailableMemory' AS mobile__system_available_memory
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'appAvailableMemory' AS mobile__app_available_memory
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'batteryLevel' AS mobile__battery_level
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'batteryState' AS mobile__battery_state
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'lowPowerMode' AS mobile__low_power_mode
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'availableStorage' AS mobile__available_storage
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'totalStorage' AS mobile__total_storage
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'isPortrait' AS mobile__is_portrait
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'open_idfa' AS mobile__open_idfa
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'network_technology' AS mobile__network_technology
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'network_type' AS mobile__network_type
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'physical_memory' AS mobile__physical_memory
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'system_available_memory' AS mobile__system_available_memory
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'app_available_memory' AS mobile__app_available_memory
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'battery_level' AS mobile__battery_level
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'battery_state' AS mobile__battery_state
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'low_power_mode' AS mobile__low_power_mode
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'available_storage' AS mobile__available_storage
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'total_storage' AS mobile__total_storage
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'is_portrait' AS mobile__is_portrait
       , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'resolution' AS mobile__resolution
       , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'scale' AS mobile__scale
       , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'language' AS mobile__language
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'appSetId' AS mobile__app_set_id
-      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'appSetIdScope' AS mobile__app_set_id_scope
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'app_set_id' AS mobile__app_set_id
+      , contexts_com_snowplowanalytics_snowplow_mobile_context_1[1]->>'app_set_id_scope' AS mobile__app_set_id_scope
 
       , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'latitude' AS geo__latitude
       , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'longitude' AS geo__longitude
-      , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'latitudeLongitudeAccuracy' AS geo__latitude_longitude_accuracy
+      , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'latitude_longitude_accuracy' AS geo__latitude_longitude_accuracy
       , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'altitude' AS geo__altitude
-      , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'altitudeAccuracy' AS geo__altitude_accuracy
+      , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'altitude_accuracy' AS geo__altitude_accuracy
       , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'bearing' AS geo__bearing
       , contexts_com_snowplowanalytics_snowplow_geolocation_context_1[1]->>'speed' AS geo__speed
 
@@ -205,26 +209,26 @@ base_query_2 AS (
       , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'name' AS screen__name
       , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'activity' AS screen__activity
       , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'fragment' AS screen__fragment
-      , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'topViewController' AS screen__top_view_controller
+      , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'top_view_controller' AS screen__top_view_controller
       , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'type' AS screen__type
-      , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'viewController' AS screen__view_controller
+      , contexts_com_snowplowanalytics_mobile_screen_1[1]->>'view_controller' AS screen__view_controller
 
       , contexts_com_snowplowanalytics_mobile_deep_link_1[1]->>'url' AS deep_link__url
       , contexts_com_snowplowanalytics_mobile_deep_link_1[1]->>'referrer' AS deep_link__referrer
 
       , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'viewport', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'viewport') AS browser__viewport
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'documentSize', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'documentSize') AS browser__documentSize
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'document_size', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'document_size') AS browser__documentSize
       , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'resolution', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'resolution') AS browser__resolution
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'colorDepth', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'colorDepth') AS browser__colorDepth
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'devicePixelRatio', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'devicePixelRatio') AS browser__devicePixelRatio
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'cookiesEnabled', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'cookiesEnabled') AS browser__cookiesEnabled
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'color_depth', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'color_depth') AS browser__colorDepth
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'device_pixel_ratio', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'device_pixel_ratio') AS browser__devicePixelRatio
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'cookies_enabled', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'cookies_enabled') AS browser__cookiesEnabled
       , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'online', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'online') AS browser__online
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'browserLanguage', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'browserLanguage') AS browser__browserLanguage
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'documentLanguage', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'documentLanguage') AS browser__documentLanguage
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'browser_language', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'browser_language') AS browser__browserLanguage
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'document_language', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'document_language') AS browser__documentLanguage
       , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'webdriver', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'webdriver') AS browser__webdriver
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'deviceMemory', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'deviceMemory') AS browser__deviceMemory
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'hardwareConcurrency', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'hardwareConcurrency') AS browser__hardwareConcurrency
-      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'tabId', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'tabId') AS browser__tabId
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'device_memory', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'device_memory') AS browser__deviceMemory
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'hardware_concurrency', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'hardware_concurrency') AS browser__hardwareConcurrency
+      , COALESCE(contexts_com_snowplowanalytics_snowplow_browser_context_1[1]->>'tab_id', contexts_com_snowplowanalytics_snowplow_browser_context_2[1]->>'tab_id') AS browser__tabId
 
       -- screen summary
     , contexts_com_snowplowanalytics_mobile_screen_summary_1[1]->>'foreground_sec' AS screen_summary__foreground_sec
@@ -307,7 +311,7 @@ base as (
 
   -- START: Screen / page metrics
 
-  DROP VIEW IF EXISTS unified_screen_summary_metrics;
+ DROP VIEW IF EXISTS unified_screen_summary_metrics;
 DROP VIEW IF EXISTS unified_pv_engaged_time; -- drop if required
 
 CREATE VIEW unified_screen_summary_metrics AS (
@@ -369,8 +373,7 @@ SELECT
   t.foreground_sec as engaged_time_in_s,
   t.foreground_sec + coalesce(t.background_sec, 0) AS absolute_time_in_s
 FROM
-  unified_screen_summary_metrics t
-
+  unified_screen_summary_metrics t;
 
 DROP VIEW IF EXISTS unified_pv_scroll_depth;
 create view unified_pv_scroll_depth AS
@@ -447,9 +450,8 @@ from unified_screen_summary_metrics as t;
 -- END: Screen / page metrics
 
 -- START: Unified views
-
 DROP VIEW IF EXISTS unified_views;
-create table unified_views AS
+create view unified_views AS
 with prep as (
   select
     -- event categorization fields
@@ -575,9 +577,7 @@ end
       , ev.refr_urlquery
       , ev.refr_urlfragment
       , ev.os_timezone
-      , 
-  
-      'other' as content_group
+      , 'other' as content_group
       , coalesce(cast(ev.browser__color_depth as TEXT),null) as br_colordepth
   , ev.session__previous_session_id
   , ev.screen_view__name
@@ -674,7 +674,6 @@ end
     where ev.event_name in ('page_view', 'screen_view')
     and ev.view_id is not null
     and coalesce(iab__spider_or_robot, False ) = False
-  and ev.useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'
       qualify row_number() over (partition by ev.view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) = 1
     
 ),
@@ -683,11 +682,9 @@ view_aggs as (
     view_id
     , session_identifier
       , 
-    count(case when event_name = 'page_view' then 1 else null end) as agg_test
     from unified_events as ev
     where 1=1 
     and coalesce(iab__spider_or_robot, False ) = False
-  and ev.useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'
     group by 1, 2
 ),
 view_events as (
@@ -889,7 +886,7 @@ from view_events pve
 -- END: Unified views
 
 -- START: Unified sessions
-
+-- unified sessions
 DROP VIEW IF EXISTS unified_sessions;
 CREATE VIEW unified_sessions AS
 WITH session_firsts as (
@@ -1072,8 +1069,6 @@ NULL as default_channel_group,
     where event_name in ('page_ping', 'page_view', 'screen_view')
     and view_id is not null
     and coalesce(iab__spider_or_robot, False ) = False
-  
-  and useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'
       qualify row_number() over (partition by session_identifier order by derived_tstamp) = 1
     
 ),
@@ -1107,7 +1102,6 @@ session_lasts as (
         event_name in ('page_view', 'screen_view')
         and view_id is not null
     and coalesce(iab__spider_or_robot, False ) = False
-  and not useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'
       qualify row_number() over (partition by session_identifier order by derived_tstamp desc) = 1
     
 ),
@@ -1120,7 +1114,7 @@ session_aggs as (
       , count(distinct view_id) as views
           , 
       histogram(event_name) AS event_counts
-      ,JSON(histogram(event_name)) as event_counts_string,
+      ,NULL as event_counts_string, -- TODO, consider whether this is needed or not?
      (GETVARIABLE('heartbeat') * (
               -- number of (unqiue in heartbeat increment) pages pings following a page ping (gap of heartbeat)
               count(distinct case when event_name = 'page_ping' and view_id is not null then
@@ -1131,10 +1125,12 @@ session_aggs as (
                             -- number of page pings following a page view (or no event) (gap of min visit length)
                             (count(distinct case when event_name = 'page_ping' and view_id is not null then view_id else null end) * GETVARIABLE('min_visit_length')) as engaged_time_in_s_web
       , datediff('second', min(derived_tstamp), max(derived_tstamp)) as absolute_time_in_s
+        -- TODO, count(distinct case when event_name = 'application_error' then 1 end) as app_errors
+        -- , count(distinct case when app_error__is_fatal then event_id end) as fatal_app_errors
+        -- , count(distinct screen_view__name) as screen_names_viewed
     from unified_events
     where 1 = 1
     and coalesce(iab__spider_or_robot, False ) = False
-  and useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'
     group by session_identifier
 ),
 session_aggs_with_engaged_time as (
@@ -1160,7 +1156,6 @@ session_convs as (
           from unified_events
           where 1 = 1
     and coalesce(iab__spider_or_robot, False ) = False
-  and useragent not similar to '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*'      
         group by session_identifier
 )
 select
@@ -1253,7 +1248,7 @@ select
   -- when the session starts with a ping we need to add the min visit length to get when the session actually started
     , a.engaged_time_in_s
   , a.absolute_time_in_s + case when f.event_name = 'page_ping' then GETVARIABLE('min_visit_length') else 0 end as absolute_time_in_s
-   , a.screen_names_viewed
+    -- TODO, a.screen_names_viewed
   -- marketing fields
   , f.mkt_medium
   , f.mkt_source
@@ -1421,6 +1416,7 @@ group by 1,2,3;
 
 -- START: User lasts
 
+-- user lasts
 DROP VIEW IF EXISTS unified_users_lasts;
 create view unified_users_lasts AS
 select
@@ -1443,7 +1439,7 @@ select
     , a.last_page_urlfragment
 
     , a.last_br_lang
-    , NULL AS last_br_lang_name -- not supported
+    , a.last_br_lang_name
     , a.last_screen_view__name
     , a.last_screen_view__transition_type
     , a.last_screen_view__type
