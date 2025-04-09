@@ -81,11 +81,7 @@ WITH identified_events AS (
 base_query AS (
     SELECT
         a.*,
-        COALESCE(
-            COALESCE(contexts_com_snowplowanalytics_snowplow_client_session_1[1]->>'sessionId', NULL),
-            domain_sessionid, 
-            NULL
-        ) AS user_identifier,
+        a.domain_userid AS user_identifier,
     FROM identified_events a
     QUALIFY ROW_NUMBER() OVER (PARTITION BY a.event_id ORDER BY a.collector_tstamp, a.dvce_created_tstamp) = 1
 ),

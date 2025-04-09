@@ -110,6 +110,10 @@ collector {
     #   Lax: the cookie will be sent with same-site requests, and with cross-site top-level navigation.
     #   None: the cookie will be sent with same-site and cross-site requests.
     sameSite = "None"
+    # The clientCookieName is optional. If it is set, second cookie with specified name will be returned.
+    # 'httpOnly' attribute of the client cookie will always be false. All the other attributes will be same
+    # as original cookie.
+    #clientCookieName = sp_client
   }
 
   # If you have a do not track cookie in place, the Scala Stream Collector can respect it by
@@ -193,7 +197,7 @@ collector {
 
       ## Optional endpoint url configuration to override aws kinesis endpoints,
       ## this can be used to specify local endpoints when using localstack
-      customEndpoint = "localhost.localstack.cloud:4566"
+      customEndpoint = "http://localhost.localstack.cloud:4566"
 
       # Thread pool size for Kinesis and SQS API requests
       threadPoolSize = 10
@@ -271,7 +275,7 @@ collector {
 
      ## Optional endpoint url configuration to override aws kinesis endpoints,
      ## this can be used to specify local endpoints when using localstack
-     customEndpoint = "localhost.localstack.cloud:4566"
+     customEndpoint = "http://localhost.localstack.cloud:4566"
  
      # Thread pool size for Kinesis and SQS API requests
      threadPoolSize = 10
