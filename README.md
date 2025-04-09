@@ -177,6 +177,8 @@ SELECT COUNT(*) FROM events;
 
 If you are writing using the Delta format use the [Delta extension](https://duckdb.org/docs/stable/extensions/delta.html) and `delta_scan` instead.
 
+You can find more information on the Unified data model [here](MODELLING.md).
+
 ## Gotchas
 
 ### Snowflake loader
