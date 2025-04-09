@@ -18,7 +18,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.3.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.4.0-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
@@ -227,6 +227,7 @@ services:
     volumes:
       - "./loaders/lake_loader_config_iceberg_s3.hocon:/loaders/lake_loader_config.hocon"
       - "./iglu-client:/snowplow/iglu-client"
+      - "./database/:/data/" # allows mirroring between the container FS and host FS of events data
     profiles: [lake-loader]
     environment:
       - "ACCEPT_LICENSE=${ACCEPT_LICENSE}"
