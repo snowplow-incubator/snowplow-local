@@ -66,9 +66,7 @@ Some differences include statsd reporting intervals (shorter period than ordinar
 
 ## Configuring loaders
 
-By default good, bad and incomplete events are written to a SQLite database (`database/events.db`) for persistence beyond restarts. This is useful for debugging what events have occurred if you are not loading into a warehouse or lake.
-
-However, if you do want to load to a production target you can also do so.
+Loaders that support streaming by default (i.e., BigQuery, Snowflake and Databricks) can be configured.
 
 Loaders are configured using the `--profile` flag. Currently the following loaders are supported:
 
@@ -198,36 +196,6 @@ export SERVICE_ACCOUNT_CREDENTIALS=$(cat /path/to/your/service-account-key.json)
 Lake loader can use a remote object store (e.g., AWS S3, GCS, Blob Storage) etc but will work equally well writing to Localstack S3. An example configuration of this can be found in `loaders/lake_loader_config_iceberg_s3.hocon`.
 
 If you wish to load to a different (local) bucket ensure that the resource is created in `init-aws.sh` before attempting to run the loader. Once loading has been setup you can view the data that lake loader writes out in your browser using: `https://snowplow-lake-loader.s3.localhost.localstack.cloud:4566/` or the equivalent name for your bucket.
-
-## Querying events in SQLite
-
-By default events (both good, failed and bad) are inserted into SQLite for storage and analysis in their enriched event format.
-
-These are stored as JSON objects and as a result you can use SQLite JSON operators to query the values inside. Note that these are not the same queries you would use in a warehouse where the loaders create new columns for each entity and event automatically.
-
-Example queries
-
-Get the app_id for all good events
-
-```
-select
-    json_extract(data, '$.app_id') as app_id,
-from
-    events
-WHERE
-    schema LIKE '%good%';
-```
-
-Retrieve the first context
-
-```
-select
-    json_extract(json_extract(data, '$.derived_contexts'), '$.data[0]')
-from
-    events
-WHERE
-    schema LIKE '%good%';
-```
 
 ## Incomplete events
 
