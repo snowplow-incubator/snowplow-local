@@ -292,7 +292,7 @@ services:
 
   local-failed-ui:
     container_name: "local-failed-ui"
-    image: "snowplow/failed-events-ui:0.0.2"
+    image: "snowplow/failed-events-ui:0.0.3"
     ports:
       - "3001:3000"
 
@@ -318,9 +318,12 @@ services:
     command: "flask run --host=0.0.0.0 --debug"
     environment:
       - "FLASK_APP=app"
+      - "IGLU_SUPER_API_KEY=deadbeef-dead-beef-dead-beefdeadbeef"
     volumes:
       - "./enrich:/enrich"
       - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
       - "8083:5000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
