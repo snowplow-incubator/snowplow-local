@@ -58,7 +58,7 @@ A basic website that can be used to fire test events can be accessed at [http://
 
 Although test events can be fired locally you can also send events from another remote machine using the `--tunnel` profile. See the 'Tunneling' section below.
 
-[Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) runs on port 8085. This will return unhealthy if an event has taken longer than 1 minute (this can be modified in the `enrich/enrich.hocon` file). This is useful for monitoring the health of the enrich process and ensuring that events are being processed in a timely manner.
+[Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) runs on port 8085. This will return unhealthy if an event has taken longer than 2 minutes (this can be modified in the `enrich/enrich.hocon` file). This is useful for monitoring the health of the enrich process and ensuring that events are being processed in a timely manner.
 
 ## Differences to a production pipeline
 
