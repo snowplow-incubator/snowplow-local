@@ -57,6 +57,8 @@
       "maxRetries": 10
     }
 
+    "leaseDuration": "10 seconds"
+
     # Optional, endpoint url configuration to override aws kinesis endpoints
     # Can be used to specify local endpoint when using localstack
     # "customEndpoint": "http://localhost:4566"
@@ -68,6 +70,11 @@
     # Optional, endpoint url configuration to override aws cloudwatch endpoint for metrics
     # Can be used to specify local endpoint when using localstack
     "cloudwatchCustomEndpoint": "http://localhost.localstack.cloud:4566"
+
+    "checkpointThrottledBackoffPolicy": {
+      "minBackoff": "100 millis"
+      "maxBackoff": "1 second"
+    }
   }
 
   "output": {
@@ -83,7 +90,7 @@
       # It checks places like env variables, system properties, AWS profile file.
       # https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/providers/DefaultAwsRegionProviderChain.html
       "region": "ap-southeast-2"
-      "customEndpoint": "localhost.localstack.cloud:4566"
+      "customEndpoint": "http://localhost.localstack.cloud:4566"
 
       # Optional. How the output stream/topic will be partitioned in Kinesis
       # Possible partition keys are: event_id, event_fingerprint, domain_userid, network_userid,
@@ -169,7 +176,7 @@
 
       # Optional. Use a custom Kinesis endpoint.
       # Can be used for instance to work locally with localstack
-      "customEndpoint": "localhost.localstack.cloud:4566"
+      "customEndpoint": "http://localhost.localstack.cloud:4566"
     }
 
     # Bad rows output
@@ -185,7 +192,7 @@
       # It checks places like env variables, system properties, AWS profile file.
       # https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/providers/DefaultAwsRegionProviderChain.html
       "region": "ap-southeast-2"
-      "customEndpoint": "localhost.localstack.cloud:4566"
+      "customEndpoint": "http://localhost.localstack.cloud:4566"
 
       # Optional. Policy to retry if writing to kinesis fails with unexepcted errors
       "backoffPolicy": {
@@ -229,7 +236,7 @@
       # It checks places like env variables, system properties, AWS profile file.
       # https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/regions/providers/DefaultAwsRegionProviderChain.html
       "region": "ap-southeast-2"
-      "customEndpoint": "localhost.localstack.cloud:4566"
+      "customEndpoint": "http://localhost.localstack.cloud:4566"
 
       # Optional. Policy to retry if writing to kinesis fails with unexpected errors
       "backoffPolicy": {
@@ -299,7 +306,7 @@
         "port": 8125
 
         # Required, how frequently to report metrics
-        "period": "1 second"
+        "period": "10 seconds"
 
         # Any key-value pairs to be tagged on every StatsD metric
         "tags": {
@@ -362,6 +369,14 @@
     # Version of the terraform module that deployed the app
     "moduleVersion": 1.0.0
   }
+
+  # -- Open a HTTP server that returns OK only if the app is healthy
+  "healthProbe": {
+    "port": 8000,
+    "unhealthyLatency": "2 minutes"
+  }
+
+  "assetsUpdatePeriod": "7 days"
 
   # Optional. To activate/deactive enrich features that are still in beta
   # or that are here for transition.

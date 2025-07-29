@@ -38,12 +38,14 @@ services:
 
   enrich:
     container_name: "snowplow-enrich"
-    image: snowplow/snowplow-enrich-kinesis:5.3.0-distroless
+    image: snowplow/snowplow-enrich-kinesis:6.0.0-distroless
     command: ["--config", "/snowplow/enrich/enrich.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json", "--enrichments", "/snowplow/enrich/enrichments"]
     depends_on:
       - stream-collector
       - iglu-server
     restart: on-failure:3
+    ports:
+      - "8085:8000" # health probe port
     environment:
       - "ACCEPT_LICENSE=${ACCEPT_LICENSE}"
       - "AWS_REGION=ap-southeast-2"
@@ -81,7 +83,7 @@ services:
 
   iglu-server-setup:
     container_name: "snowplow-iglu-server-setup"
-    image: snowplow/iglu-server:0.14.0-distroless
+    image: snowplow/iglu-server:0.14.1-distroless
     command: ["setup", "--config", "/snowplow/iglu-server/config.hocon"]
     depends_on:
       - postgres
@@ -95,7 +97,7 @@ services:
 
   iglu-server:
     container_name: "snowplow-iglu-server"
-    image: snowplow/iglu-server:0.14.0-distroless
+    image: snowplow/iglu-server:0.14.1-distroless
     command: ["--config", "/snowplow/iglu-server/config.hocon"]
     depends_on:
       - iglu-server-setup
@@ -169,7 +171,7 @@ services:
 
   snowflake-loader:
     container_name: snowflake-streaming-loader
-    image: snowplow/snowflake-loader-kinesis:0.4.0-distroless
+    image: snowplow/snowflake-loader-kinesis:0.5.0-distroless
     command: ["--config", "/loaders/snowflake_loader_kinesis.hocon"]
     depends_on:
       - enrich
@@ -194,7 +196,7 @@ services:
 
   snowflake-incomplete-loader:
     container_name: snowflake-streaming-loader-incomplete
-    image: snowplow/snowflake-loader-kinesis:0.4.0-distroless
+    image: snowplow/snowflake-loader-kinesis:0.5.0-distroless
     command: ["--config", "/loaders/snowflake_loader_kinesis_incomplete.hocon"]
     depends_on:
       - enrich
@@ -219,7 +221,7 @@ services:
 
   lake-loader:
     container_name: lake-loader
-    image: snowplow/lake-loader-aws:0.6.1
+    image: snowplow/lake-loader-aws:0.6.3
     command: ["--config", "/loaders/lake_loader_config.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json"]
     depends_on:
       - enrich
@@ -245,7 +247,7 @@ services:
 
   bigquery-loader:
     container_name: bigquery-loader
-    image: snowplow/bigquery-loader-kinesis:2.0.0-rc10-distroless
+    image: snowplow/bigquery-loader-kinesis:2.0.1-distroless
     command: ["--config", "/loaders/bigquery_loader_config.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json"]
     depends_on:
       - enrich
@@ -272,7 +274,7 @@ services:
 
   snowbridge:
     container_name: snowbridge
-    image: snowplow/snowbridge:3.2.1-aws-only
+    image: snowplow/snowbridge:3.4.0-aws-only
     command: ["/opt/snowplow/snowbridge"]
     depends_on:
       - enrich

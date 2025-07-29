@@ -58,6 +58,8 @@ A basic website that can be used to fire test events can be accessed at [http://
 
 Although test events can be fired locally you can also send events from another remote machine using the `--tunnel` profile. See the 'Tunneling' section below.
 
+[Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) runs on port 8085. This will return unhealthy if an event has taken longer than 2 minutes (this can be modified in the `enrich/enrich.hocon` file). This is useful for monitoring the health of the enrich process and ensuring that events are being processed in a timely manner.
+
 ## Differences to a production pipeline
 
 This software is not designed to be run in production or at high volume and is instead designed for a local experience.
@@ -129,15 +131,14 @@ By default Snowbridge uses `TRIM_HORIZON` to read from the Kinesis enriched stre
 The syntax for this command may vary slightly depending on your shell. You can find more information on running and configuring Snowbridge [here](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/configuration/).
 
 ## Supported components
-
 * [Scala stream collector](https://docs.snowplow.io/docs/pipeline-components-and-applications/stream-collector/) 3.3.0
-* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 5.3.0
-* [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) 0.14.0
+* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.0.0
+* [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) 0.14.1
 * [Javascript tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/) 3.23
-* [Snowflake streaming loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/snowflake-streaming-loader/) 0.4.0
-* [Lake Loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/lake-loader/) 0.6.1
-* [BigQuery loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.0-rc10)
-* [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.2.1
+* [Snowflake streaming loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/snowflake-streaming-loader/) 0.5.0
+* [Lake Loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/lake-loader/) 0.6.3
+* [BigQuery loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.1)
+* [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.4.0
 
 Under the hood Localstack is used to simulate the AWS components - primarily used for service messaging (Kinesis and Dynamodb) including the communication between the collector and the enricher as well as checkpointing for KCL. Localstack also provides a mock S3 service that you can use if you wish to use the Lake Loader to write to S3 (which in turn uses the local filesystem rather than AWS S3). By default Localstack will persist state to disk.
 
@@ -278,4 +279,4 @@ The KCL, specifically within enrich has a pesty habit of being slow to 'steal' l
 
 ## Copyright and license
 
-Snowplow is copyright 2024 Snowplow Analytics Ltd.
+Snowplow is copyright 2024-2025 Snowplow Analytics Ltd.
