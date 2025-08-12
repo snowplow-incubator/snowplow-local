@@ -18,7 +18,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.4.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.5.0-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
@@ -38,7 +38,7 @@ services:
 
   enrich:
     container_name: "snowplow-enrich"
-    image: snowplow/snowplow-enrich-kinesis:6.0.0-distroless
+    image: snowplow/snowplow-enrich-kinesis:6.0.1-rc1-distroless
     command: ["--config", "/snowplow/enrich/enrich.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json", "--enrichments", "/snowplow/enrich/enrichments"]
     depends_on:
       - stream-collector
