@@ -225,7 +225,7 @@
 
     # Optional. Incomplete events output.
     # If set, an incomplete enriched event holding the errors in derived_context will get emitted on top of a bad row
-    "incomplete": {
+    "failed": {
       "type": "Kinesis"
 
       # Name of the Kinesis stream to write to

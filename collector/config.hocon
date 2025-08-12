@@ -2,8 +2,8 @@
 # All rights reserved.
 #
 # This software is made available by Snowplow Analytics, Ltd.,
-# under the terms of the Snowplow Limited Use License Agreement, Version 1.0
-# located at https://docs.snowplow.io/limited-use-license-1.0
+# under the terms of the Snowplow Limited Use License Agreement, Version 1.1
+# located at https://docs.snowplow.io/limited-use-license-1.1
 # BY INSTALLING, DOWNLOADING, ACCESSING, USING OR DISTRIBUTING ANY PORTION
 # OF THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT.
 
@@ -182,10 +182,6 @@ collector {
 
 
     bad = "collector-bad"
-
-    # Whether to use the incoming event's ip as the partition key for the good stream/topic
-    # Note: Nsq does not make use of partition key.
-    useIpAddressAsPartitionKey = false
 
     good {
 
@@ -369,7 +365,7 @@ collector {
 
   # Configures how long the colletor should pause after receiving a sigterm before starting the graceful shutdown.
   # During this period the collector continues to accept new connections and respond to requests.
-  preTerminationPeriod = 10 seconds
+  preTerminationPeriod = 5 seconds
 
   # During the preTerminationPeriod, the collector can be configured to return 503s on the /health endpoint
   # Can be helpful for removing the collector from a load balancer's targets.
