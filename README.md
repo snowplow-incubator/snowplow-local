@@ -30,11 +30,6 @@ Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) 
 
 This software is licensed under the Snowplow Limited Use License Agreement. For more information please see the [LICENSE.md](LICENSE.md) file. For a more comprehensive list of Snowplow licensing please see [this document](https://docs.snowplow.io/docs/contributing/copyright-license/#source-available-components).
 
-## Disclaimer
-
->[!IMPORTANT]
->This is not an officially supported Snowplow product.
-
 ## Getting started
 
 1. Make sure you have `docker` and `docker-compose` installed
