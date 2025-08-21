@@ -171,7 +171,7 @@ services:
 
   snowflake-loader:
     container_name: snowflake-streaming-loader
-    image: snowplow/snowflake-loader-kinesis:0.5.0-distroless
+    image: snowplow/snowflake-loader-kinesis:0.5.1-distroless
     command: ["--config", "/loaders/snowflake_loader_kinesis.hocon"]
     depends_on:
       - enrich
@@ -196,7 +196,7 @@ services:
 
   snowflake-incomplete-loader:
     container_name: snowflake-streaming-loader-incomplete
-    image: snowplow/snowflake-loader-kinesis:0.5.0-distroless
+    image: snowplow/snowflake-loader-kinesis:0.5.1-distroless
     command: ["--config", "/loaders/snowflake_loader_kinesis_incomplete.hocon"]
     depends_on:
       - enrich
@@ -274,10 +274,14 @@ services:
 
   snowbridge:
     container_name: snowbridge
-    image: snowplow/snowbridge:3.4.0-aws-only
+    image: snowplow/snowbridge:3.5.0-aws-only
     command: ["/opt/snowplow/snowbridge"]
+    restart: on-failure:3
     depends_on:
-      - enrich
+      localstack:
+        condition: service_healthy
+      enrich:
+        condition: service_started
     volumes:
       - "./snowbridge:/snowbridge"
     profiles: [snowbridge]
