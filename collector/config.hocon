@@ -373,4 +373,12 @@ collector {
 
   # The server's deadline for closing connections during graceful shutdown
   terminationDeadline = 1 seconds
+
+  compression {
+    enabled = false
+    type = zstd
+    gzipCompressionLevel = 6
+    zstdCompressionLevel = 9
+  }
+
 }

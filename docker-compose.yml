@@ -18,7 +18,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.5.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.6.0-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
@@ -30,6 +30,7 @@ services:
       - "AWS_REGION=ap-southeast-2"
       - "AWS_ACCESS_KEY_ID=localstack"
       - "AWS_SECRET_ACCESS_KEY=doesntmatter"
+      # - "JDK_JAVA_OPTIONS=-Dorg.slf4j.simpleLogger.defaultLogLevel=debug" # use this if you want to see event metrics
     volumes:
       - "./collector/config.hocon:/snowplow/collector/config.hocon"
     extra_hosts:
@@ -38,7 +39,7 @@ services:
 
   enrich:
     container_name: "snowplow-enrich"
-    image: snowplow/snowplow-enrich-kinesis:6.0.1-rc1-distroless
+    image: snowplow/snowplow-enrich-kinesis:6.1.0-distroless
     command: ["--config", "/snowplow/enrich/enrich.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json", "--enrichments", "/snowplow/enrich/enrichments"]
     depends_on:
       - stream-collector
@@ -163,6 +164,23 @@ services:
     volumes:
       - "./connect/benthos.yaml:/benthos.yaml"
       - "./database:/database"
+    extra_hosts:
+      - "localhost.localstack.cloud:host-gateway"
+      - "host.docker.internal:host-gateway"
+
+  signals-forwarder:
+    container_name: "signals-forwarder"
+    image: docker.redpanda.com/redpandadata/connect:4.38.0
+    command: ["-c", "/signals.yaml"]
+    ports:
+      - "4196:4196"
+    depends_on:
+      - enrich
+    environment:
+      - SIGNALS_DATA_URL=${SIGNALS_DATA_URL}
+    volumes:
+      - "./connect/signals.yaml:/signals.yaml"
+    profiles: [signals]
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
       - "host.docker.internal:host-gateway"

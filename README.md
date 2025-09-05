@@ -19,6 +19,7 @@ Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) 
 - View bad, incomplete and good events in an easy-to-use user interface
 - Test changes to the pipeline configuration (collector, enrich, etc)
 - Stream data to your data warehouse or lake of choice
+- Stream data to Signals Lite to test and develop with Snowplow Signals
 - Monitor pipeline performance and metrics using Grafana
 - Test new or existing versions of the Snowplow pipeline
 - Write enriched data to remote destinations (including S3, GCS etc)
@@ -41,19 +42,35 @@ This software is licensed under the Snowplow Limited Use License Agreement. For 
 
 ## Services
 
-The collector runs on port 8080 and can be accessed at [http://localhost:8080](http://localhost:8080). When configuring a [tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/) you can use this as the collector URL.
+### Web debugging interface
 
 A user interface listens to events that have been enriched (good, bad and incomplete) and displays them hosted on a page at [http://localhost:3001](http://localhost:3001).
 
-[Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) runs on port 8081 and can be accessed at [http://localhost:8081](http://localhost:8081). This is where you can upload your schemas and validate them. You can also point enrich directly at an existing Iglu repository that contains schemas by updating `iglu-client/resolver.json`.
-
-[Grafana](https://grafana.com) is used for metrics reporting and basic dashboarding and runs on port 3000 and can be accessed at [http://localhost:3000](http://localhost:3000). The default credentials are `admin:admin`. Graphite is used as the default data source so this does not require manual configuration - the collector and [enricher](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/monitoring/) will both emit statsd metrics here automatically.
+### Test website
 
 A basic website that can be used to fire test events can be accessed at [http://localhost:8082](http://localhost:8082). This is useful for testing your pipeline and ensuring that events are being collected correctly.
 
 Although test events can be fired locally you can also send events from another remote machine using the `--tunnel` profile. See the 'Tunneling' section below.
 
+### Collector
+The collector runs on port 8080 and can be accessed at [http://localhost:8080](http://localhost:8080). When configuring a [tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/) you can use this as the collector URL.
+
+### Enrich
+
 [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) runs on port 8085. This will return unhealthy if an event has taken longer than 2 minutes (this can be modified in the `enrich/enrich.hocon` file). This is useful for monitoring the health of the enrich process and ensuring that events are being processed in a timely manner.
+
+### Snowplow Signals
+In order to use Snowplow Signals you will need to set the `SIGNALS_DATA_URL` environment variable in your `.env` file to the URL of your Signals Lite instance. In addition use the `--profile signals` flag when using `docker compose` to run the forwarding service.
+
+### Iglu Server
+
+[Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) runs on port 8081 and can be accessed at [http://localhost:8081](http://localhost:8081). This is where you can upload your schemas and validate them. You can also point enrich directly at an existing Iglu repository that contains schemas by updating `iglu-client/resolver.json`.
+
+
+
+### Grafana / monitoring
+
+[Grafana](https://grafana.com) is used for metrics reporting and basic dashboarding and runs on port 3000 and can be accessed at [http://localhost:3000](http://localhost:3000). The default credentials are `admin:admin`. Graphite is used as the default data source so this does not require manual configuration - the collector and [enricher](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/monitoring/) will both emit statsd metrics here automatically.
 
 ## Differences to a production pipeline
 
