@@ -167,6 +167,23 @@ services:
       - "localhost.localstack.cloud:host-gateway"
       - "host.docker.internal:host-gateway"
 
+  signals-forwarder:
+    container_name: "signals-forwarder"
+    image: docker.redpanda.com/redpandadata/connect:4.38.0
+    command: ["-c", "/signals.yaml"]
+    ports:
+      - "4196:4196"
+    depends_on:
+      - enrich
+    environment:
+      - SIGNALS_DATA_URL=${SIGNALS_DATA_URL}
+    volumes:
+      - "./connect/signals.yaml:/signals.yaml"
+    profiles: [signals]
+    extra_hosts:
+      - "localhost.localstack.cloud:host-gateway"
+      - "host.docker.internal:host-gateway"
+
   # # setup optional Snowflake streaming sink
 
   snowflake-loader:
