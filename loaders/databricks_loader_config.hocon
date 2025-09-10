@@ -1,0 +1,155 @@
+{
+  # -- Accept the terms of the Snowplow Limited Use License Agreement
+  # -- See https://docs.snowplow.io/limited-use-license-1.1/
+  "license": {
+    "accept": ${ACCEPT_LICENSE}
+  }
+
+  "input": {
+    "streamName": "enriched-good"
+    "appName": "snowplow-databricks-loader"
+
+    "initialPosition": {
+      "type": "LATEST"
+    }
+
+    # -- How the underlying Kinesis client should fetch events from the stream
+    "retrievalMode": {
+      # -- Options are "Polling" for the client to poll Kinesis for more events when needed
+      # -- or "FanOut" to enabled Kinesis's Enhanced Fan Out feature using HTTP/2
+      "type": "Polling"
+
+      # -- Only used if retrieval mode is type Polling. How many events the client may fetch in a single poll.
+      "maxRecords": 5
+    }
+
+    "workerIdentifier": ${HOSTNAME}
+    "leaseDuration": "10 seconds"
+
+    "maxLeasesToStealAtOneTimeFactor": 2.0
+
+    # -- Configures how to backoff and retry in case of DynamoDB provisioned throughput limits
+    "checkpointThrottledBackoffPolicy": {
+      "minBackoff": "100 millis"
+      "maxBackoff": "1 second"
+    }
+  }
+
+  "output": {
+
+    "good": {
+      # -- Base URL of the Databricks instance
+      "host": ${DATABRICKS_HOST}
+
+      # -- Uncomment if using machine-to-machine oauth authentication
+      # "oauth": {
+      #  "clientId": ${DATABRICKS_CLIENT_ID}
+      #  "clientSecret": ${DATABRICKS_CLIENT_SECRET}
+      # }
+
+      # -- Personal access token (PAT) to authenticate. An alternative to oauth.
+      "token": ${DATABRICKS_TOKEN}
+
+      # -- Databricks Unity Catalog name
+      "catalog": ${DATABRICKS_CATALOG}
+
+      # -- Databricks schema
+      "schema": ${DATABRICKS_SCHEMA}
+
+      # -- Databricks Unity Catalog Volume name
+      "volume": ${DATABRICKS_VOLUME}
+
+      # -- Compression algorithm for the uploaded parquet file
+      "compression": "snappy"
+    }
+
+    "bad": {
+      # -- output kinesis stream for emitting failed events that could not be processed
+      "streamName": "databricks-loader-bad"
+
+      # -- how to retry sending failed events if we exceed the kinesis write throughput limits
+      "throttledBackoffPolicy": {
+        "minBackoff": "100 milliseconds"
+        "maxBackoff": "1 second"
+      }
+
+      # -- the maximum allowed to records we are allowed to send to Kinesis in 1 PutRecords request
+      "recordLimit": 10
+
+      # -- the maximum allowed to bytes we are allowed to send to Kinesis in 1 PutRecords request
+      "byteLimit": 5242880
+    }
+
+  }
+
+  "batching": {
+
+    # - Events are uploaded to databricks when the batch reaches this size in bytes
+    "maxBytes": 16000000
+
+    # - Events are uploaded to Databricks after exceeding this duration, even if the `maxBytes` size has not been reached
+    "maxDelay": "1 second"
+
+    # - How many batches can we send simultaneously over the network to Databricks.
+    "uploadConcurrency":  1
+  }
+
+  # Retry configuration for Databricks operation failures
+  "retries": {
+
+    # -- Configures exponential backoff on errors related to how Databricks is set up for this loader.
+    # -- Examples include authentication errors and permissions errors.
+    # -- This class of errors are reported periodically to the monitoring webhook.
+    "setupErrors": {
+      "delay": "30 seconds"
+    }
+
+    # -- Configures exponential backoff errors that are likely to be transient.
+    # -- Examples include server errors and network errors
+    "transientErrors": {
+      "delay": "1 second"
+      "attempts": 5
+    }
+  }
+
+  # -- Schemas that won't be loaded to Databricks. Optional, default value []
+  "skipSchemas": [
+    "iglu:com.acme/skipped1/jsonschema/1-0-0",
+    "iglu:com.acme/skipped2/jsonschema/1-0-*",
+    "iglu:com.acme/skipped3/jsonschema/1-*-*",
+    "iglu:com.acme/skipped4/jsonschema/*-*-*"
+  ]
+
+  # -- Whether the loader should crash and exit if it fails to resolve an Iglu Schema.
+  # -- We recommend `true` because Snowplow enriched events have already passed validation, so a missing schema normally
+  # -- indicates an error that needs addressing.
+  # -- Change to `false` so events go the failed events stream instead of crashing the loader.
+  "exitOnMissingIgluSchema": true
+
+  # -- Configuration of internal http client used for iglu resolver, alerts and telemetry
+  "http": {
+    "client": {
+      "maxConnectionsPerServer": 4
+    }
+  }
+
+  "monitoring": {
+    "metrics": {
+
+      "statsd": {
+        "hostname": "host.docker.internal"
+        "port": 8125
+        "period": "1 second"
+        "prefix": "snowplow.databricks.loader"
+      }
+    }
+
+  }
+
+  # -- Optional, configure telemetry
+  # -- All the fields are optional
+  "telemetry": {
+    # -- Set to true to disable telemetry
+    "disable": true
+  }
+}

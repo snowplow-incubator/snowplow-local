@@ -15,7 +15,7 @@ Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) 
 ## What can you do with Snowplow Local?
 
 - Develop and test new schemas and enrichments
-- Test out new loaders (e.g., Snowflake, BigQuery, Lake Loader)
+- Test out new loaders (e.g., Snowflake, BigQuery, Lake Loader, Databricks Loader)
 - View bad, incomplete and good events in an easy-to-use user interface
 - Test changes to the pipeline configuration (collector, enrich, etc)
 - Stream data to your data warehouse or lake of choice
@@ -86,17 +86,20 @@ However, if you do want to load to a production target you can also do so.
 
 Loaders are configured using the `--profile` flag. Currently the following loaders are supported:
 
-[ * ] Snowflake streaming loader (`--profile snowflake-loader`)
-[ * ] Lake loader (Delta, Hudi & Iceberg) (`--profile lake-loader`)
-[ * ] BigQuery streaming loader (`--profile bigquery-loader`)
+[ * ] [Snowflake streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/snowflake-streaming-loader/configuration-reference/) (`--profile snowflake-loader`)
+[ * ] [Lake loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/lake-loader/configuration-reference/) (Delta, Hudi & Iceberg) (`--profile lake-loader`)
+[ * ] [BigQuery streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/bigquery-loader/configuration-reference/) (`--profile bigquery-loader`)
+[ * ] [Databricks streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/configuration-reference/) (`--profile databricks-loader`)
 
-If you would like to (optionally) run the Snowflake streaming loader as well you will need to run these steps.
+Batch (RDB) loaders are not currently supported.
+
+If you would like to (optionally) run one of the streaming loaders as well you will need to run these steps.
 
 1. Configure your Snowflake private key and warehouse details in your `.env` file. You will need a [private key](https://docs.snowflake.com/en/user-guide/key-pair-auth) set up rather than a username / password as this is what the app uses for authentication.
 2. Launch docker compose with the warehouse you would like:
 * For Snowflake streaming loader use:  `docker-compose --profile snowflake-loader up` which will launch the normal components + the Snowflake Kinesis loader.
 * For the Lake loader use `--profile lake-loader` (you can use Lake Loader to load to a remote blob storage service, e.g., S3 or locally using Localstack).
-* For the BigQuery loader use `--profile bigquery-loader`.
+* For the BigQuery loader use `--profile bigquery-loader` or for Databricks use `--profile databricks-loader`. Check the `.env.example` file in advance to see what environment variables you will need to set for authentication and setup.
 3. Send some events!
 
 You can optionally start an additional loader for incomplete events (for Snowflake only currently) by adding `--profile snowflake-incomplete-loader`.
@@ -143,13 +146,14 @@ By default Snowbridge uses `TRIM_HORIZON` to read from the Kinesis enriched stre
 The syntax for this command may vary slightly depending on your shell. You can find more information on running and configuring Snowbridge [here](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/configuration/).
 
 ## Supported components
-* [Scala stream collector](https://docs.snowplow.io/docs/pipeline-components-and-applications/stream-collector/) 3.6.0
+* [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.6.0
 * [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.1.0
-* [Iglu Server](https://docs.snowplow.io/docs/pipeline-components-and-applications/iglu/iglu-repositories/iglu-server/) 0.14.1
-* [Javascript tracker](https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/) 3.23
-* [Snowflake streaming loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/snowflake-streaming-loader/) 0.5.1
-* [Lake Loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/lake-loader/) 0.6.3
-* [BigQuery loader](https://docs.snowplow.io/docs/pipeline-components-and-applications/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.1)
+* [Iglu Server](https://docs.snowplow.io/docs/api-reference/iglu/iglu-repositories/iglu-server/) 0.14.1
+* [Javascript tracker](https://docs.snowplow.io/docs/sources/trackers/web-trackers/) 3.23
+* [Snowflake streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/snowflake-streaming-loader/) 0.5.1
+* [Lake Loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/lake-loader/) 0.6.3
+* [BigQuery loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.1)
+* [Databricks loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/) (0.1.0)
 * [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.5.0
 
 Under the hood Localstack is used to simulate the AWS components - primarily used for service messaging (Kinesis and Dynamodb) including the communication between the collector and the enricher as well as checkpointing for KCL. Localstack also provides a mock S3 service that you can use if you wish to use the Lake Loader to write to S3 (which in turn uses the local filesystem rather than AWS S3). By default Localstack will persist state to disk.
