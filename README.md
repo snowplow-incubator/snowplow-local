@@ -146,7 +146,7 @@ By default Snowbridge uses `TRIM_HORIZON` to read from the Kinesis enriched stre
 The syntax for this command may vary slightly depending on your shell. You can find more information on running and configuring Snowbridge [here](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/configuration/).
 
 ## Supported components
-* [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.5.0
+* [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.6.0
 * [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.1.0
 * [Iglu Server](https://docs.snowplow.io/docs/api-reference/iglu/iglu-repositories/iglu-server/) 0.14.1
 * [Javascript tracker](https://docs.snowplow.io/docs/sources/trackers/web-trackers/) 3.23
