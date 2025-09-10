@@ -289,6 +289,42 @@ services:
 
     extra_hosts:
       - "localhost.localstack.cloud:host-gateway"
+      - "host.docker.internal:host-gateway"
+
+
+  databricks-loader:
+    container_name: databricks-loader
+    image: snowplow/databricks-loader-kinesis:0.1.0-distroless
+    command: ["--config", "/loaders/databricks_loader_config.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json"]
+    depends_on:
+      - enrich
+      - iglu-server
+    volumes:
+      - "./loaders/databricks_loader_config.hocon:/loaders/databricks_loader_config.hocon"
+      - "./iglu-client:/snowplow/iglu-client"
+    profiles: [databricks-loader]
+    environment:
+      - "ACCEPT_LICENSE=${ACCEPT_LICENSE}"
+      - "DATABRICKS_HOST=${DATABRICKS_HOST}"
+      # Credentials when using personal access token (PAT)
+      - "DATABRICKS_TOKEN=${DATABRICKS_TOKEN}"
+      # OAuth
+      - "DATABRICKS_CLIENT_ID=${DATABRICKS_CLIENT_ID}"
+      - "DATABRICKS_CLIENT_SECRET=${DATABRICKS_CLIENT_SECRET}"
+      - "DATABRICKS_CATALOG=${DATABRICKS_CATALOG}"
+      - "DATABRICKS_SCHEMA=${DATABRICKS_SCHEMA}"
+      - "DATABRICKS_VOLUME=${DATABRICKS_VOLUME}"
+      # AWS settings
+      - "AWS_ACCESS_KEY_ID=localstack"
+      - "AWS_SECRET_ACCESS_KEY=doesntmatter"
+      - "AWS_REGION=ap-southeast-2"
+      - "AWS_ENDPOINT_URL=http://localhost.localstack.cloud:4566"
+      - "AWS_DEFAULT_REGION=ap-southeast-2"
+      - "DEFAULT_REGION=ap-southeast-2"
+
+    extra_hosts:
+      - "localhost.localstack.cloud:host-gateway"
+      - "host.docker.internal:host-gateway"
 
   snowbridge:
     container_name: snowbridge

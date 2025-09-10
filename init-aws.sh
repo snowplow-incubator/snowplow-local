@@ -14,6 +14,7 @@ awslocal kinesis create-stream --stream-name pii --region ap-southeast-2 --shard
 awslocal kinesis create-stream --stream-name snowflake-loader-bad --region ap-southeast-2 --shard-count 1
 awslocal kinesis create-stream --stream-name bigquery-bad --region ap-southeast-2 --shard-count 1
 awslocal kinesis create-stream --stream-name snowflake-loader-bad-incomplete --region ap-southeast-2 --shard-count 1
+awslocal kinesis create-stream --stream-name databricks-loader-bad --region ap-southeast-2 --shard-count 1
 
 # lake loader bucket
 awslocal s3api create-bucket --bucket snowplow-lake-loader --region ap-southeast-2 --create-bucket-configuration LocationConstraint=ap-southeast-2
