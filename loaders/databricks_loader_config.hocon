@@ -94,10 +94,10 @@
     "uploadConcurrency":  1
   }
 
-  # Retry configuration for BigQuery operation failures
+  # Retry configuration for Databricks operation failures
   "retries": {
 
-    # -- Configures exponential backoff on errors related to how BigQuery is set up for this loader.
+    # -- Configures exponential backoff on errors related to how Databricks is set up for this loader.
     # -- Examples include authentication errors and permissions errors.
     # -- This class of errors are reported periodically to the monitoring webhook.
     "setupErrors": {
@@ -112,7 +112,7 @@
     }
   }
 
-  # -- Schemas that won't be loaded to BigQuery. Optional, default value []
+  # -- Schemas that won't be loaded to Databricks. Optional, default value []
   "skipSchemas": [
     "iglu:com.acme/skipped1/jsonschema/1-0-0",
     "iglu:com.acme/skipped2/jsonschema/1-0-*",
