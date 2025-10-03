@@ -18,7 +18,7 @@ services:
 
   stream-collector:
     container_name: "snowplow-stream-collector"
-    image: snowplow/scala-stream-collector-kinesis:3.6.0-distroless
+    image: snowplow/scala-stream-collector-kinesis:3.7.0-distroless
     command: ["--config", "/snowplow/collector/config.hocon"]
     depends_on:
       - localstack
@@ -30,7 +30,7 @@ services:
       - "AWS_REGION=ap-southeast-2"
       - "AWS_ACCESS_KEY_ID=localstack"
       - "AWS_SECRET_ACCESS_KEY=doesntmatter"
-      # - "JDK_JAVA_OPTIONS=-Dorg.slf4j.simpleLogger.defaultLogLevel=debug" # use this if you want to see event metrics
+      - "JDK_JAVA_OPTIONS=-Dorg.slf4j.simpleLogger.defaultLogLevel=debug" # use this if you want to see event metrics
     volumes:
       - "./collector/config.hocon:/snowplow/collector/config.hocon"
     extra_hosts:
@@ -177,7 +177,7 @@ services:
     depends_on:
       - enrich
     environment:
-      - SIGNALS_DATA_URL=${SIGNALS_DATA_URL}
+      - SIGNALS_INGEST_URL=${SNOWPLOW_SIGNALS_INGEST_URL}
     volumes:
       - "./connect/signals.yaml:/signals.yaml"
     profiles: [signals]
@@ -294,7 +294,7 @@ services:
 
   databricks-loader:
     container_name: databricks-loader
-    image: snowplow/databricks-loader-kinesis:0.1.0-distroless
+    image: snowplow/databricks-loader-kinesis:0.2.1-distroless
     command: ["--config", "/loaders/databricks_loader_config.hocon", "--iglu-config", "/snowplow/iglu-client/iglu_resolver.json"]
     depends_on:
       - enrich
@@ -387,3 +387,35 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+
+  travel-site-demo:
+    container_name: "travel-site"
+    image: "snowplow/demo-travel-site:0.0.1"
+
+    profiles: [travel-demo]
+    environment:
+      - "NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL=${NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL}"
+      - "SNOWPLOW_SIGNALS_API_KEY=${SNOWPLOW_SIGNALS_API_KEY}"
+      - "SNOWPLOW_SIGNALS_API_KEY_ID=${SNOWPLOW_SIGNALS_API_KEY_ID}"
+      - "SNOWPLOW_SIGNALS_ORGANIZATION_ID=${SNOWPLOW_SIGNALS_ORGANIZATION_ID}"
+      - "SNOWPLOW_SIGNALS_SERVICE_NAME=${SNOWPLOW_SIGNALS_SERVICE_NAME}"
+
+      # Sandbox variables
+      - "SNOWPLOW_SIGNALS_TRIAL_TOKEN=${SNOWPLOW_SIGNALS_TRIAL_TOKEN}"
+
+      # Fetching variables
+      - "NEXT_PUBLIC_SNOWPLOW_COLLECTOR_URL=${NEXT_PUBLIC_SNOWPLOW_COLLECTOR_URL}"
+      - "AI_MODEL_PROVIDER=${AI_MODEL_PROVIDER}"
+      - "AI_MODEL_NAME=${AI_MODEL_NAME}"
+      - "OPENAI_API_KEY=${OPENAI_API_KEY}"
+      - "AWS_BEARER_TOKEN_BEDROCK=${AWS_BEARER_TOKEN_BEDROCK}"
+      - "AWS_REGION=${AWS_REGION}"
+      - "AGENTCORE_BASE_URL=${AGENTCORE_BASE_URL}"
+
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "8086:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
