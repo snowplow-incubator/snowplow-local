@@ -4,7 +4,7 @@
 
 Snowplow Local is designed to provide a fast, easy to use local development environment that spins up an entire Snowplow pipeline that more closely resembles a production (AWS) environment by mocking out these services using [Localstack](https://www.localstack.cloud/). Is is the fastest way to spin up a Snowplow pipeline without requiring any cloud access or external services.
 
-It is not designed for production use and comes with only a minimal user interface. For a fully-managed or self-managed experience see the [Snowplow BDP product](https://docs.snowplow.io/docs/get-started/snowplow-bdp/) or [self-hosted pipeline](https://snowplow.io/snowplow-self-hosted-pipeline-product-description) respectively.
+It is not designed for production use and comes with only a minimal user interface. For a fully-managed or self-managed experience see the [Snowplow CDI product](https://docs.snowplow.io/docs/get-started/snowplow-bdp/) or [self-hosted pipeline](https://snowplow.io/snowplow-self-hosted-pipeline-product-description) respectively.
 
 ## Who is Snowplow Local for?
 
@@ -19,7 +19,7 @@ Snowplow Local requires some familiarity with [Docker](https://www.docker.com/) 
 - View bad, incomplete and good events in an easy-to-use user interface
 - Test changes to the pipeline configuration (collector, enrich, etc)
 - Stream data to your data warehouse or lake of choice
-- Stream data to Signals Lite to test and develop with Snowplow Signals
+- Stream data and develop with [Snowplow Signals](https://docs.snowplow.io/docs/signals/) using either CDI or Signals Sandbox
 - Monitor pipeline performance and metrics using Grafana
 - Test new or existing versions of the Snowplow pipeline
 - Write enriched data to remote destinations (including S3, GCS etc)
@@ -60,7 +60,26 @@ The collector runs on port 8080 and can be accessed at [http://localhost:8080](h
 [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) runs on port 8085. This will return unhealthy if an event has taken longer than 2 minutes (this can be modified in the `enrich/enrich.hocon` file). This is useful for monitoring the health of the enrich process and ensuring that events are being processed in a timely manner.
 
 ### Snowplow Signals
-In order to use Snowplow Signals you will need to set the `SIGNALS_DATA_URL` environment variable in your `.env` file to the URL of your Signals Lite instance. In addition use the `--profile signals` flag when using `docker compose` to run the forwarding service.
+
+To use [Snowplow Signals](https://docs.snowplow.io/docs/signals/) you will either need a Signals CDI (BDP) or Signals Sandbox (trial) instance.
+
+For CDI setup you will need the following set in your `.env` environment file.
+```
+NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL=https://<your-subdomain>.signals.snowplow.io
+SNOWPLOW_SIGNALS_API_KEY=<your-api-key>
+SNOWPLOW_SIGNALS_API_KEY_ID=<your-api-key-id>
+SNOWPLOW_SIGNALS_ORGANIZATION_ID=<your-organization-id>
+SNOWPLOW_SIGNALS_SERVICE_NAME=<your-service-name> (optional if using the demo site)
+```
+
+For Sandbox setup you will need the following set in your `.env` environment file. Both of these values can be found in the Signals Sandbox setup instructions.
+
+```
+NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL=https://<your-subdomain>.signals.snowplow.io
+SNOWPLOW_SIGNALS_TRIAL_TOKEN=<your-trial-token>
+```
+
+In addition use the `--profile signals` flag when using `docker compose` to run the forwarding service which will forward events from your Snowplow Local instance to the ingestion endpoint for Signals Sandbox. This setp is not required for CDI users.
 
 ### Iglu Server
 
@@ -115,7 +134,7 @@ The enrichment process runs with mostly default settings. You can configure the 
 Some enrichments (specifically the IAB Spiders and Robots, IP lookups and referer parser) rely on third party assets to enrich events that are not stored locally. On start any assets placed in the local `enrich-assets` folder are automatically mounted to a S3 bucket where they can be accessed.
 
 The following enrichments will require assets to be manually downloaded or specified due to their license agreements.
-IAB Bots and Spiders - sample files are provided in `enrich-assets`. The commercial list requires payment (for non-BDP customers) and can be downloaded from [here](https://www.iab.com/guidelines/iab-abc-international-spiders-bots-list/).
+IAB Bots and Spiders - sample files are provided in `enrich-assets`. The commercial list requires payment (for non-CDI customers) and can be downloaded from [here](https://www.iab.com/guidelines/iab-abc-international-spiders-bots-list/).
 
 IP Lookups - IP lookup data is provided by Maxmind. You can use the free (GeoLite) or paid (GeoIP) MMDB databases to perform lookups however both require [registration](https://blog.maxmind.com/2019/12/significant-changes-to-accessing-and-using-geolite2-databases/). The free databases are available from Maxmind [here](https://www.maxmind.com/en/geolite2/signup).
 
@@ -146,14 +165,14 @@ By default Snowbridge uses `TRIM_HORIZON` to read from the Kinesis enriched stre
 The syntax for this command may vary slightly depending on your shell. You can find more information on running and configuring Snowbridge [here](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/configuration/).
 
 ## Supported components
-* [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.6.0
+* [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.7.0
 * [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.1.0
 * [Iglu Server](https://docs.snowplow.io/docs/api-reference/iglu/iglu-repositories/iglu-server/) 0.14.1
 * [Javascript tracker](https://docs.snowplow.io/docs/sources/trackers/web-trackers/) 3.23
 * [Snowflake streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/snowflake-streaming-loader/) 0.5.1
 * [Lake Loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/lake-loader/) 0.6.3
 * [BigQuery loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.1)
-* [Databricks loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/) (0.1.0)
+* [Databricks loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/) (0.2.1)
 * [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.5.0
 
 Under the hood Localstack is used to simulate the AWS components - primarily used for service messaging (Kinesis and Dynamodb) including the communication between the collector and the enricher as well as checkpointing for KCL. Localstack also provides a mock S3 service that you can use if you wish to use the Lake Loader to write to S3 (which in turn uses the local filesystem rather than AWS S3). By default Localstack will persist state to disk.

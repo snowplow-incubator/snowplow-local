@@ -27,8 +27,8 @@ output:
   label: "signals_forwarder"
   broker:
     outputs:
-      - stdout: {}
+      # - stdout: {}
       - http_client:
-          url: "${SIGNALS_DATA_URL}/com.snowplowanalytics.snowplow/events"
+          url: "${SIGNALS_INGEST_URL}/com.snowplowanalytics.snowplow/events"
           verb: POST
           timeout: 5s
