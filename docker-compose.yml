@@ -390,9 +390,9 @@ services:
 
   travel-site-demo:
     container_name: "travel-site"
-    image: "snowplow/demo-travel-site:0.0.1"
+    image: "snowplow/demo-travel-site:latest"
 
-    profiles: [travel-demo]
+    profiles: [travel-site]
     environment:
       - "NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL=${NEXT_PUBLIC_SNOWPLOW_SIGNALS_API_URL}"
       - "SNOWPLOW_SIGNALS_API_KEY=${SNOWPLOW_SIGNALS_API_KEY}"
@@ -407,10 +407,15 @@ services:
       - "NEXT_PUBLIC_SNOWPLOW_COLLECTOR_URL=${NEXT_PUBLIC_SNOWPLOW_COLLECTOR_URL}"
       - "AI_MODEL_PROVIDER=${AI_MODEL_PROVIDER}"
       - "AI_MODEL_NAME=${AI_MODEL_NAME}"
+      # OpenAI specific settings
       - "OPENAI_API_KEY=${OPENAI_API_KEY}"
-      - "AWS_BEARER_TOKEN_BEDROCK=${AWS_BEARER_TOKEN_BEDROCK}"
+
+      # AWS specific settings
       - "AWS_REGION=${AWS_REGION}"
-      - "AGENTCORE_BASE_URL=${AGENTCORE_BASE_URL}"
+      - "BEDROCK_AGENT_ARN=${AWS_BEDROCK_AGENT_ARN}"
+      - "NEXT_PUBLIC_COGNITO_USER_POOL_ID=${NEXT_PUBLIC_COGNITO_USER_POOL_ID}"
+      - "NEXT_PUBLIC_COGNITO_CLIENT_ID=${NEXT_PUBLIC_COGNITO_CLIENT_ID}"
+
 
     restart: unless-stopped
     volumes:
