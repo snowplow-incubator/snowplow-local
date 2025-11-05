@@ -62,6 +62,7 @@
       # -- Compression algorithm for the uploaded parquet file
       "compression": "snappy"
 
+      # -- HTTP timeout for Databricks API requests
       "httpTimeout": "20 seconds"
     }
 
