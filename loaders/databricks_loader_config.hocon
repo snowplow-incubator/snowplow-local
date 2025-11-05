@@ -61,6 +61,8 @@
 
       # -- Compression algorithm for the uploaded parquet file
       "compression": "snappy"
+
+      "httpTimeout": "20 seconds"
     }
 
     "bad": {
