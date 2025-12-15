@@ -166,13 +166,13 @@ The syntax for this command may vary slightly depending on your shell. You can f
 
 ## Supported components
 * [Scala stream collector](https://docs.snowplow.io/docs/api-reference/stream-collector/) 3.7.0
-* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.2.1
+* [Enrich](https://docs.snowplow.io/docs/pipeline-components-and-applications/enrichment-components/enrich-kinesis/) 6.4.0
 * [Iglu Server](https://docs.snowplow.io/docs/api-reference/iglu/iglu-repositories/iglu-server/) 0.14.1
 * [Javascript tracker](https://docs.snowplow.io/docs/sources/trackers/web-trackers/) 3.23
 * [Snowflake streaming loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/snowflake-streaming-loader/) 0.5.1
-* [Lake Loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/lake-loader/) 0.7.0
+* [Lake Loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/lake-loader/) 0.8.0
 * [BigQuery loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/bigquery-loader/#streamloader) (2.0.1)
-* [Databricks loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/) (0.3.0)
+* [Databricks loader](https://docs.snowplow.io/docs/api-reference/loaders-storage-targets/databricks-streaming-loader/) (0.4.0)
 * [Snowbridge](https://docs.snowplow.io/docs/destinations/forwarding-events/snowbridge/) 3.6.2
 
 Under the hood Localstack is used to simulate the AWS components - primarily used for service messaging (Kinesis and Dynamodb) including the communication between the collector and the enricher as well as checkpointing for KCL. Localstack also provides a mock S3 service that you can use if you wish to use the Lake Loader to write to S3 (which in turn uses the local filesystem rather than AWS S3). By default Localstack will persist state to disk.
